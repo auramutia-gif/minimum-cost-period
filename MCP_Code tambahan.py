@@ -316,6 +316,18 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# ─── Sidebar Tip ──────────────────────────────────────────────────────────────
+st.markdown("""
+<div style='background:#FFF0F7; border:1px solid #F9C8DE; border-radius:10px; 
+padding:10px 16px; margin-bottom:20px; display:flex; align-items:center; 
+gap:10px; font-size:13px; color:#7B3560'>
+    <span style='font-size:18px'>⚙️</span>
+    <span><strong>Parameter ada di sidebar kiri.</strong> Jika sidebar tidak 
+    terlihat, klik tombol <strong style='background:#7B3560; color:white; 
+    padding:1px 8px; border-radius:4px; font-size:12px'> &gt; </strong> 
+    di pojok kiri atas layar untuk membukanya.</span>
+</div>
+""", unsafe_allow_html=True)
 
 # ─── Upload ───────────────────────────────────────────────────────────────────
 st.markdown("""
