@@ -267,9 +267,37 @@ html, body, [class*="css"] {
 
 hr { border-color: #F5D6E8 !important; margin: 24px 0 !important; }
 
-#MainMenu, footer, header { visibility: hidden; }
+/* Sembunyikan Menu dan Footer saja */
+#MainMenu, footer { 
+    visibility: hidden; 
+}
+
+/* Biarkan header tetap ada tapi transparan agar tombol sidebar terlihat */
+header[data-testid="stHeader"] {
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* Styling tombol panah pembuka sidebar agar muncul dan berwarna pink lucu */
+header[data-testid="stHeader"] button {
+    background-color: #FFF0F7 !important; 
+    color: #7B3560 !important;             
+    border: 1px solid #F9C8DE !important;  
+    margin-left: 10px !important;
+    border-radius: 8px !important;
+}
+
+/* Efek saat tombol panah disorot (hover) */
+header[data-testid="stHeader"] button:hover {
+    background-color: #7B3560 !important;
+    color: white !important;
+}
 </style>
 """, unsafe_allow_html=True)
+
+
+# ─── Sidebar ──────────────────────────────────────────────────────────────────
+with st.sidebar:
 
 
 # ─── Sidebar ──────────────────────────────────────────────────────────────────
