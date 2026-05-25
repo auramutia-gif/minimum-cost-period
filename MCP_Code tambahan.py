@@ -580,7 +580,7 @@ with col2:
         df_opt.style
             .format({"Total Cost (Rp)": "{:,.0f}", "Cost/Period (Rp)": "{:,.1f}", "Lot Size": "{:,}"})
             .set_properties(**{"font-size": "12px"})
-            .applymap(lambda _: "background-color:#F0FDF4; color:#065F46; font-weight:600",
+            .map(lambda _: "background-color:#F0FDF4; color:#065F46; font-weight:600",
                       subset=["Cost/Period (Rp)"]),
         use_container_width=True, height=340
     )
