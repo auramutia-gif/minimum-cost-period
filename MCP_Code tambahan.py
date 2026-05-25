@@ -287,17 +287,34 @@ header[data-testid="stHeader"] button {
     border-radius: 8px !important;
 }
 
-/* Efek saat tombol panah disorot (hover) */
+hr { border-color: #F5D6E8 !important; margin: 24px 0 !important; }
+
+/* Sembunyikan Menu dan Footer saja */
+#MainMenu, footer { 
+    visibility: hidden; 
+}
+
+/* Biarkan header tetap ada tapi transparan agar tombol sidebar terlihat */
+header[data-testid="stHeader"] {
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* Styling tombol panah pembuka sidebar agar muncul dan berwarna pink lucu */
+header[data-testid="stHeader"] button {
+    background-color: #FFF0F7 !important; 
+    color: #7B3560 !important;             
+    border: 1px solid #F9C8DE !important;  
+    margin-left: 10px !important;
+    border-radius: 8px !important;
+}
+
 header[data-testid="stHeader"] button:hover {
     background-color: #7B3560 !important;
     color: white !important;
 }
 </style>
 """, unsafe_allow_html=True)
-
-
-# ─── Sidebar ──────────────────────────────────────────────────────────────────
-with st.sidebar:
 
 
 # ─── Sidebar ──────────────────────────────────────────────────────────────────
@@ -310,12 +327,12 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="sidebar-section">Biaya</div>', unsafe_allow_html=True)
-    setup_cost    = st.number_input("Setup Cost per Order (S)", value=750, min_value=0, help="Biaya tetap setiap kali melakukan pemesanan")
-    holding_cost  = st.number_input("Holding Cost per Unit (H)", value=500, min_value=0, help="Biaya simpan per unit per periode")
+    setup_cost = st.number_input("Setup Cost per Order (S)", value=750, min_value=0, help="Biaya tetap setiap kali melakukan pemesanan")
+    holding_cost = st.number_input("Holding Cost per Unit (H)", value=500, min_value=0, help="Biaya simpan per unit per periode")
 
     st.markdown('<div class="sidebar-section">Inventori</div>', unsafe_allow_html=True)
     initial_inventory = st.number_input("Initial Inventory", value=1000, min_value=0, help="Stok awal di periode pertama")
-    safety_stock      = st.number_input("Safety Stock", value=500, min_value=0, help="Stok pengaman minimum yang harus selalu tersedia")
+    safety_stock = st.number_input("Safety Stock", value=500, min_value=0, help="Stok pengaman minimum yang harus selalu tersedia")
 
     st.markdown('<div class="sidebar-section">Waktu</div>', unsafe_allow_html=True)
     lead_time = st.number_input("Lead Time (periods)", value=1, min_value=0, help="Jarak antara pemesanan dan penerimaan barang")
@@ -331,9 +348,6 @@ with st.sidebar:
         </div>
     </div>
     """, unsafe_allow_html=True)
-
-
-
 
 # ─── Hero Banner ──────────────────────────────────────────────────────────────
 st.markdown("""
