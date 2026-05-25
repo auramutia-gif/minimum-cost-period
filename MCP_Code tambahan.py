@@ -304,17 +304,7 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style='margin-top:12px; padding:10px 14px; background:#5C2A45; border-radius:10px; border:1px solid #8B4F72'>
-        <div style='font-size:10px; font-weight:600; color:#8B4F72; letter-spacing:0.5px; margin-bottom:6px'>FORMAT CSV</div>
-        <div style='font-family: "DM Mono", monospace; font-size:10px; color:#8B4F72; line-height:1.8'>
-            Period, GR, Scheduled_Receipts<br>
-            Jan, 1818, 0<br>
-            Feb, 2469, 0<br>
-            Mar, 2784, 500
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+
 
 
 # ─── Hero Banner ──────────────────────────────────────────────────────────────
@@ -696,8 +686,8 @@ c1, c2 = st.columns(2, gap="large")
 
 with c1:
     fig1 = go.Figure()
-    fig1.add_bar(x=chart_labels, y=mrp_gross_req, name="GR", marker_color="#E8789F", opacity=0.85)
-    fig1.add_bar(x=chart_labels, y=mrp_planned_receipts, name="Lot Size (PORec)", marker_color="#C96B9A", opacity=0.85)
+    fig1.add_bar(x=chart_labels, y=mrp_gross_req, name="GR", marker_color="#F472B6", opacity=0.9)
+    fig1.add_bar(x=chart_labels, y=mrp_planned_receipts, name="Lot Size (PORec)", marker_color="#7E1D4E", opacity=0.9)
     fig1.update_layout(
         title=dict(text="GR vs Lot Size per Periode", font=dict(size=14, family="DM Sans")),
         barmode="group", height=320,
@@ -713,8 +703,8 @@ with c2:
     fig2 = go.Figure()
     sc_vals = df_cost["Setup Cost (Rp)"].tolist()
     hc_vals = df_cost["Holding Cost (Rp)"].tolist()
-    fig2.add_bar(x=chart_labels, y=sc_vals, name="Setup Cost", marker_color="#D4709A", opacity=0.85)
-    fig2.add_bar(x=chart_labels, y=hc_vals, name="Holding Cost", marker_color="#F0B8D0", opacity=0.85)
+    fig2.add_bar(x=chart_labels, y=sc_vals, name="Setup Cost", marker_color="#7E1D4E", opacity=0.9)
+    fig2.add_bar(x=chart_labels, y=hc_vals, name="Holding Cost", marker_color="#FBCFE8", opacity=0.95)
     fig2.update_layout(
         title=dict(text="Setup vs Holding Cost per Periode", font=dict(size=14, family="DM Sans")),
         barmode="stack", height=320,
@@ -733,12 +723,12 @@ with c3:
     fig3.add_scatter(
         x=chart_labels, y=mrp_projected_bal,
         mode="lines+markers",
-        line=dict(color="#C96B9A", width=2.5),
-        marker=dict(size=7, color="#C96B9A"),
-        fill="tozeroy", fillcolor="rgba(201,107,154,0.08)",
+        line=dict(color="#9D174D", width=2.5),
+        marker=dict(size=7, color="#9D174D"),
+        fill="tozeroy", fillcolor="rgba(157,23,77,0.07)",
         name="PAB"
     )
-    fig3.add_hline(y=safety_stock, line_dash="dash", line_color="#E8789F", line_width=1.5,
+    fig3.add_hline(y=safety_stock, line_dash="dash", line_color="#F472B6", line_width=1.5,
                    annotation_text=f"Safety Stock ({safety_stock:,})", annotation_position="top left")
     fig3.update_layout(
         title=dict(text="Projected Available Balance (PAB)", font=dict(size=14, family="DM Sans")),
@@ -755,7 +745,7 @@ with c4:
             labels=["Setup Cost", "Holding Cost"],
             values=[total_setup, total_holding],
             hole=0.55,
-            marker=dict(colors=["#D4709A", "#F0B8D0"]),
+            marker=dict(colors=["#7E1D4E", "#FBCFE8"]),
             textinfo="label+percent",
             textfont=dict(family="DM Sans", size=12),
         ))
