@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ─── Custom CSS ───────────────────────────────────────────────────────────────
+# ─── Custom CSS (Pink Pastel, Cute, Soft UI) ───────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
@@ -22,41 +22,49 @@ html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif;
 }
 
-/* ── Background ── */
+/* ── Background (Very Light Pink/White) ── */
 .stApp {
-    background: #F0F4F8;
+    background: #FFFDFE;
 }
 
-/* ── Sidebar ── */
+/* ── Sidebar (Soft Pink Pastel) ── */
 [data-testid="stSidebar"] {
-    background: #0F172A !important;
-    border-right: 1px solid #1E293B;
+    background: #FFEDF1 !important; /* Pastel Pink */
+    border-right: 1px solid #FFCCD5; /* Soft Border */
 }
-[data-testid="stSidebar"] * {
-    color: #CBD5E1 !important;
-}
+
+/* Sidebar Text & Titles */
+[data-testid="stSidebar"] *,
 [data-testid="stSidebar"] .stNumberInput label,
 [data-testid="stSidebar"] h1,
 [data-testid="stSidebar"] h2,
 [data-testid="stSidebar"] h3 {
-    color: #F1F5F9 !important;
+    color: #8C5260 !important; /* Darker Soft Pink/Brown for readable text */
 }
+
+/* Sidebar Input Fields (White background in Pink Sidebar) */
 [data-testid="stSidebar"] [data-testid="stNumberInput"] input {
-    background: #1E293B !important;
-    color: #F1F5F9 !important;
-    border: 1px solid #334155 !important;
-    border-radius: 8px !important;
+    background: #FFFFFF !important;
+    color: #8C5260 !important;
+    border: 1px solid #FFCCD5 !important;
+    border-radius: 12px !important; /* Cute corner */
     font-family: 'DM Mono', monospace !important;
     font-size: 15px !important;
+    box-shadow: inset 0 1px 2px rgba(255,182,193,0.2) !important;
 }
+
+/* Input Focus (Main Accent Color - Brighter Soft Pink) */
 [data-testid="stSidebar"] [data-testid="stNumberInput"] input:focus {
-    border-color: #38BDF8 !important;
-    box-shadow: 0 0 0 2px rgba(56,189,248,0.15) !important;
+    border-color: #FF8FAB !important;
+    box-shadow: 0 0 0 2px rgba(255,143,171,0.15) !important;
 }
+
+/* Increment/Decrement Buttons */
 [data-testid="stSidebar"] button[data-testid="stBaseButton-minimal"] {
-    background: #1E293B !important;
-    color: #38BDF8 !important;
-    border: 1px solid #334155 !important;
+    background: #FFFFFF !important;
+    color: #FF8FAB !important;
+    border: 1px solid #FFCCD5 !important;
+    border-radius: 8px !important;
 }
 
 /* ── Main area padding ── */
@@ -65,22 +73,25 @@ html, body, [class*="css"] {
     max-width: 1400px;
 }
 
-/* ── Hero header ── */
+/* ── Hero header (Cute Gradient) ── */
 .hero-banner {
-    background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 60%, #0EA5E9 100%);
-    border-radius: 16px;
+    background: linear-gradient(135deg, #FF99AC 0%, #FFB6C1 40%, #FFF5F7 100%);
+    border-radius: 20px; /* Cuter corners */
     padding: 36px 40px;
     margin-bottom: 28px;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(255,182,193,0.3); /* Soft shadow */
 }
+
+/* Decorative Circles */
 .hero-banner::before {
     content: '';
     position: absolute;
     top: -60px; right: -60px;
     width: 220px; height: 220px;
     border-radius: 50%;
-    background: rgba(14,165,233,0.12);
+    background: rgba(255,255,255,0.3);
 }
 .hero-banner::after {
     content: '';
@@ -88,35 +99,39 @@ html, body, [class*="css"] {
     bottom: -40px; left: 30%;
     width: 160px; height: 160px;
     border-radius: 50%;
-    background: rgba(56,189,248,0.08);
+    background: rgba(255,255,255,0.2);
 }
+
 .hero-title {
-    font-size: 28px;
+    font-size: 30px; /* Slightly bigger */
     font-weight: 600;
-    color: #F1F5F9;
+    color: #FFFFFF;
     margin: 0 0 6px;
     letter-spacing: -0.3px;
+    text-shadow: 1px 1px 2px rgba(140,82,96,0.3); /* Text shadow for cute glow */
 }
 .hero-sub {
     font-size: 14px;
-    color: #94A3B8;
+    color: #FFFFFF;
     margin: 0;
     font-weight: 400;
+    opacity: 0.9;
 }
 .hero-badge {
     display: inline-block;
-    background: rgba(14,165,233,0.2);
-    color: #38BDF8;
-    border: 1px solid rgba(56,189,248,0.3);
+    background: #FFFFFF;
+    color: #FF8FAB;
+    border: 1px solid rgba(255,143,171,0.2);
     border-radius: 20px;
-    padding: 3px 12px;
+    padding: 4px 14px;
     font-size: 12px;
     font-weight: 500;
     margin-bottom: 14px;
     letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(255,182,193,0.2);
 }
 
-/* ── Metric cards ── */
+/* ── Metric cards (Soft White Panels) ── */
 .metric-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -125,164 +140,204 @@ html, body, [class*="css"] {
 }
 .metric-card {
     background: white;
-    border-radius: 12px;
-    padding: 18px 20px;
-    border: 1px solid #E2E8F0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 16px; /* Cuter corners */
+    padding: 20px;
+    border: 1px solid #FFEDF1;
+    box-shadow: 0 2px 10px rgba(255,182,193,0.1); /* Soft shadow */
+    transition: transform 0.2s;
 }
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255,182,193,0.15);
+}
+
 .metric-label {
     font-size: 11px;
     font-weight: 600;
-    color: #94A3B8;
+    color: #C0808F; /* Lighter soft pink/brown */
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 .metric-value {
-    font-size: 22px;
-    font-weight: 600;
-    color: #0F172A;
+    font-size: 24px; /* Bigger value */
+    font-weight: 700;
+    color: #FF8FAB; /* Cute accent color for value */
     font-family: 'DM Mono', monospace;
     line-height: 1.2;
 }
 .metric-sub {
     font-size: 11px;
-    color: #94A3B8;
-    margin-top: 3px;
+    color: #C0808F;
+    margin-top: 4px;
 }
-.metric-card.blue  { border-top: 3px solid #0EA5E9; }
-.metric-card.green { border-top: 3px solid #10B981; }
-.metric-card.amber { border-top: 3px solid #F59E0B; }
-.metric-card.red   { border-top: 3px solid #EF4444; }
+
+/* Metric card specific borders (Pink variations) */
+.metric-card.blue  { border-top: 4px solid #FF8FAB; } /* Cute Accent Pink */
+.metric-card.green { border-top: 4px solid #FFC8DD; } /* Lighter Pink */
+.metric-card.amber { border-top: 4px solid #FFAFCC; } /* Medium Pink */
+.metric-card.red   { border-top: 4px solid #BDE0FE; } /* Soft Pastel Blue for contrast */
 
 /* ── Section headers ── */
 .section-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 24px 0 14px;
+    gap: 12px;
+    margin: 32px 0 16px;
 }
 .section-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
+    width: 36px; height: 36px;
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(255,182,193,0.1);
 }
 .section-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
-    color: #0F172A;
+    color: #8C5260;
 }
 .section-subtitle {
     font-size: 12px;
-    color: #94A3B8;
-    margin-top: 1px;
+    color: #C0808F;
+    margin-top: 2px;
 }
 
-/* ── Upload area ── */
+/* Icons background colors (Pinkish tints) */
+.section-header .section-icon.upload { background:#FFF0F3; color: #FF8FAB; }
+.section-header .section-icon.analysis { background:#FFF0F3; color: #FFC8DD; }
+.section-header .section-icon.mrp { background:#FFF0F3; color: #FFAFCC; }
+.section-header .section-icon.cost { background:#FFF0F3; color: #BDE0FE; }
+.section-header .section-icon.charts { background:#FFF0F3; color: #FF99AC; }
+.section-header .section-icon.download { background:#FFF0F3; color: #FF8FAB; }
+
+/* ── Upload area (Cutest Upload) ── */
 [data-testid="stFileUploader"] {
     background: white;
-    border-radius: 12px;
-    padding: 4px;
-    border: 2px dashed #CBD5E1;
+    border-radius: 16px;
+    padding: 8px;
+    border: 3px dashed #FFCCD5;
 }
 [data-testid="stFileUploader"]:hover {
-    border-color: #0EA5E9;
+    border-color: #FF8FAB;
+    background: #FFF9FA;
 }
 
-/* ── Dataframe ── */
+/* ── Dataframe (Softened table) ── */
 [data-testid="stDataFrame"] {
-    border-radius: 10px !important;
+    border-radius: 12px !important;
     overflow: hidden;
-    border: 1px solid #E2E8F0 !important;
+    border: 1px solid #FFEDF1 !important;
+    box-shadow: 0 1px 5px rgba(255,182,193,0.05);
 }
 .dvn-scroller {
-    border-radius: 10px !important;
+    border-radius: 12px !important;
 }
 
-/* ── Download button ── */
+/* ── Download button (Cute accent colors) ── */
 [data-testid="stDownloadButton"] button {
-    background: #0F172A !important;
+    background: #FF8FAB !important; /* Main accent cute pink */
     color: white !important;
     border: none !important;
-    border-radius: 10px !important;
-    padding: 10px 24px !important;
-    font-weight: 500 !important;
+    border-radius: 12px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
     font-size: 14px !important;
     letter-spacing: 0.2px !important;
     transition: all 0.2s !important;
+    box-shadow: 0 2px 8px rgba(255,143,171,0.3) !important;
 }
 [data-testid="stDownloadButton"] button:hover {
-    background: #1E293B !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(15,23,42,0.25) !important;
+    background: #FF99AC !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,143,171,0.4) !important;
 }
 
-/* ── Info/warning boxes ── */
-.info-box {
-    background: #EFF6FF;
-    border: 1px solid #BFDBFE;
-    border-left: 4px solid #3B82F6;
-    border-radius: 0 8px 8px 0;
-    padding: 12px 16px;
-    margin-bottom: 20px;
+/* Alternative download button */
+[data-testid="stDownloadButton"]:nth-of-type(2) button {
+    background: #FFFFFF !important;
+    color: #FF8FAB !important;
+    border: 2px solid #FF8FAB !important;
+    box-shadow: 0 2px 8px rgba(255,143,171,0.15) !important;
+}
+[data-testid="stDownloadButton"]:nth-of-type(2) button:hover {
+    background: #FFF9FA !important;
+    box-shadow: 0 4px 12px rgba(255,143,171,0.2) !important;
+}
+
+/* ── Info/warning boxes (Softened Colors) ── */
+.info-box, .warn-box, .success-box {
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
     font-size: 13px;
-    color: #1E40AF;
+    border-left-width: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.info-box {
+    background: #FFF9FA; /* Very light pink tint */
+    border: 1px solid #FFEDF1;
+    border-left-color: #FFCCD5;
+    color: #8C5260;
 }
 .warn-box {
-    background: #FFFBEB;
-    border: 1px solid #FDE68A;
-    border-left: 4px solid #F59E0B;
-    border-radius: 0 8px 8px 0;
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    font-size: 13px;
+    background: #FFFBF0; /* Light cream/yellow tint */
+    border: 1px solid #FFF1D1;
+    border-left-color: #FED171;
     color: #92400E;
 }
 .success-box {
-    background: #ECFDF5;
-    border: 1px solid #A7F3D0;
-    border-left: 4px solid #10B981;
-    border-radius: 0 8px 8px 0;
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    font-size: 13px;
-    color: #065F46;
+    background: #F0FDFA; /* Light teal tint for success */
+    border: 1px solid #CCFBF1;
+    border-left-color: #5EEAD4;
+    color: #0F5132;
 }
 
-/* ── Cost table ── */
+/* ── Cost table panel ── */
 .cost-table-wrap {
     background: white;
-    border-radius: 12px;
-    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    border: 1px solid #FFEDF1;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(255,182,193,0.08);
 }
 
 /* ── Sidebar section label ── */
 .sidebar-section {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: #475569 !important;
-    padding: 16px 0 6px;
-    border-top: 1px solid #1E293B;
-    margin-top: 8px;
+    color: #C0808F !important;
+    padding: 20px 0 8px;
+    border-top: 1px solid #FFCCD5;
+    margin-top: 12px;
 }
 
-/* ── Step badge in optimal table ── */
+/* ── Step badge in optimal table (Pink badges) ── */
 .step-pill {
-    background: #EFF6FF;
-    color: #1D4ED8;
-    border-radius: 6px;
-    padding: 2px 8px;
+    background: #FFF0F3;
+    color: #FF8FAB;
+    border-radius: 8px;
+    padding: 3px 10px;
     font-size: 12px;
     font-weight: 600;
 }
 
-/* ── Divider ── */
-hr { border-color: #E2E8F0 !important; margin: 24px 0 !important; }
+/* ── Cute style overrides for the footer and center text ── */
+.cute-footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 12px;
+    color: #8C5260;
+    opacity: 0.7;
+    border-top: 1px solid #FFEDF1;
+    padding-top: 20px;
+}
+
+/* ── Divider (Softened) ── */
+hr { border-color: #FFEDF1 !important; margin: 32px 0 !important; }
 
 /* ── Hide default streamlit elements ── */
 #MainMenu, footer, header { visibility: hidden; }
@@ -293,9 +348,9 @@ hr { border-color: #E2E8F0 !important; margin: 24px 0 !important; }
 # ─── Sidebar ──────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
-    <div style='padding: 20px 0 16px'>
-        <div style='font-size:22px; font-weight:700; color:#F1F5F9; letter-spacing:-0.5px'>MCP Optimizer</div>
-        <div style='font-size:12px; color:#64748B; margin-top:3px'>Material Requirements Planning</div>
+    <div style='padding: 20px 0 16px; text-align: center;'>
+        <div style='font-size:26px; font-weight:700; color:#FF8FAB; letter-spacing:-0.5px; text-shadow: 1px 1px 1px rgba(140,82,96,0.1);'>MCP Optimizer</div>
+        <div style='font-size:12px; color:#C0808F; margin-top:4px; font-weight: 400;'>Material Requirements Planning</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -310,10 +365,11 @@ with st.sidebar:
     st.markdown('<div class="sidebar-section">Waktu</div>', unsafe_allow_html=True)
     lead_time = st.number_input("Lead Time (periods)", value=1, min_value=0, help="Jarak antara pemesanan dan penerimaan barang")
 
+    # Pinkish themed info boxes in sidebar
     st.markdown("""
-    <div style='margin-top:32px; padding:14px; background:#1E293B; border-radius:10px; border:1px solid #334155'>
-        <div style='font-size:11px; font-weight:600; color:#38BDF8; letter-spacing:0.5px; margin-bottom:8px'>CARA PAKAI</div>
-        <div style='font-size:11px; color:#94A3B8; line-height:1.6'>
+    <div style='margin-top:32px; padding:16px; background:#FFF9FA; border-radius:12px; border:1px solid #FFEDF1; box-shadow: inset 0 1px 3px rgba(255,182,193,0.1);'>
+        <div style='font-size:11px; font-weight:600; color:#FF8FAB; letter-spacing:0.5px; margin-bottom:8px'>CARA PAKAI</div>
+        <div style='font-size:11px; color:#8C5260; line-height:1.6'>
             1. Atur parameter di atas<br>
             2. Upload file CSV<br>
             3. Analisis hasil otomatis<br>
@@ -323,9 +379,9 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div style='margin-top:12px; padding:10px 14px; background:#1E293B; border-radius:10px; border:1px solid #334155'>
-        <div style='font-size:10px; font-weight:600; color:#475569; letter-spacing:0.5px; margin-bottom:6px'>FORMAT CSV</div>
-        <div style='font-family: "DM Mono", monospace; font-size:10px; color:#64748B; line-height:1.8'>
+    <div style='margin-top:12px; padding:12px 16px; background:#FFF9FA; border-radius:12px; border:1px solid #FFEDF1; box-shadow: inset 0 1px 3px rgba(255,182,193,0.1);'>
+        <div style='font-size:10px; font-weight:600; color:#C0808F; letter-spacing:0.5px; margin-bottom:6px'>FORMAT CSV</div>
+        <div style='font-family: "DM Mono", monospace; font-size:10px; color:#A0707F; line-height:1.8'>
             Period, GR, Scheduled_Receipts<br>
             Jan, 1818, 0<br>
             Feb, 2469, 0<br>
@@ -348,7 +404,7 @@ st.markdown("""
 # ─── Upload ───────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
-    <div class="section-icon" style="background:#EFF6FF">📂</div>
+    <div class="section-icon upload">📂</div>
     <div>
         <div class="section-title">Upload Data</div>
         <div class="section-subtitle">File CSV dengan kolom: Period, GR, Scheduled_Receipts</div>
@@ -481,7 +537,7 @@ for k in range(periods):
     total = sc + hc
     cost_breakdown.append({
         "Periode":          periods_label[k],
-        "GR":               mrp_gross_req[k],
+        "GR":                mrp_gross_req[k],
         "Lot Size (PORec)": lot,
         "PAB Akhir":        pab,
         "Setup Cost (Rp)":  sc,
@@ -499,10 +555,10 @@ total_orders  = sum(1 for x in mrp_planned_receipts if x > 0)
 total_units   = sum(mrp_planned_receipts)
 
 
-# ─── METRIC CARDS ─────────────────────────────────────────────────────────────
+# ─── METRIC CARDS (Pink Variations) ─────────────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
-    <div class="section-icon" style="background:#F0FDF4">📊</div>
+    <div class="section-icon upload">📊</div>
     <div>
         <div class="section-title">Ringkasan Hasil</div>
         <div class="section-subtitle">Hasil optimasi MCP untuk seluruh periode perencanaan</div>
@@ -512,32 +568,33 @@ st.markdown("""
 
 m1, m2, m3, m4 = st.columns(4)
 
-def fmt_rp(val):
+# Simple currency formatter (No division by 1000 for small numbers, for clarity)
+def fmt_rp_simple(val):
     if val >= 1_000_000:
         return f"Rp {val/1_000_000:.1f}jt"
     elif val >= 1_000:
-        return f"Rp {val/1_000:.0f}rb"
+        return f"Rp {val/1_000:.1f}rb" # Show decimals for small rb
     return f"Rp {val:,.0f}"
 
 with m1:
     st.markdown(f"""
     <div class="metric-card blue">
         <div class="metric-label">Grand Total Cost</div>
-        <div class="metric-value">{fmt_rp(grand_total)}</div>
+        <div class="metric-value">{fmt_rp_simple(grand_total)}</div>
         <div class="metric-sub">Total biaya keseluruhan</div>
     </div>""", unsafe_allow_html=True)
 with m2:
     st.markdown(f"""
     <div class="metric-card green">
         <div class="metric-label">Total Setup Cost</div>
-        <div class="metric-value">{fmt_rp(total_setup)}</div>
+        <div class="metric-value">{fmt_rp_simple(total_setup)}</div>
         <div class="metric-sub">{total_orders} kali order dilakukan</div>
     </div>""", unsafe_allow_html=True)
 with m3:
     st.markdown(f"""
     <div class="metric-card amber">
         <div class="metric-label">Total Holding Cost</div>
-        <div class="metric-value">{fmt_rp(total_holding)}</div>
+        <div class="metric-value">{fmt_rp_simple(total_holding)}</div>
         <div class="metric-sub">Dari {total_units:,} unit total dipesan</div>
     </div>""", unsafe_allow_html=True)
 with m4:
@@ -555,7 +612,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 # ─── ITERASI & OPTIMAL ────────────────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
-    <div class="section-icon" style="background:#FFF7ED">🔍</div>
+    <div class="section-icon upload">🔍</div>
     <div>
         <div class="section-title">Proses Iterasi MCP</div>
         <div class="section-subtitle">Semua kombinasi yang diuji dan hasil terbaik tiap langkah</div>
@@ -563,35 +620,40 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# Pinkish accents in the tables (Subtle color mapping)
+df_iter_styled = pd.DataFrame(all_iterations).style.format({
+    "Total Cost (Rp)": "{:,.0f}",
+    "Cost/Period (Rp)": "{:,.1f}",
+    "Net Requirement": "{:,}",
+    "Lot Size": "{:,}"
+}).set_properties(**{"font-size": "12px"})
+
 col1, col2 = st.columns([3, 2], gap="large")
 with col1:
     st.markdown("**Semua Iterasi yang Diuji**")
-    df_iter = pd.DataFrame(all_iterations)
-    st.dataframe(
-        df_iter.style
-            .format({"Total Cost (Rp)": "{:,.0f}", "Cost/Period (Rp)": "{:,.1f}", "Net Requirement": "{:,}", "Lot Size": "{:,}"})
-            .set_properties(**{"font-size": "12px"}),
-        use_container_width=True, height=340
-    )
+    st.dataframe(df_iter_styled, use_container_width=True, height=340)
+
 with col2:
     st.markdown("**Kombinasi Optimal per Langkah**")
-    df_opt = pd.DataFrame(optimal_combinations)
-    st.dataframe(
-        df_opt.style
-            .format({"Total Cost (Rp)": "{:,.0f}", "Cost/Period (Rp)": "{:,.1f}", "Lot Size": "{:,}"})
-            .set_properties(**{"font-size": "12px"})
-            .map(lambda _: "background-color:#F0FDF4; color:#065F46; font-weight:600",
-                      subset=["Cost/Period (Rp)"]),
-        use_container_width=True, height=340
+    df_opt_styled = pd.DataFrame(optimal_combinations).style.format({
+        "Total Cost (Rp)": "{:,.0f}",
+        "Cost/Period (Rp)": "{:,.1f}",
+        "Lot Size": "{:,}"
+    }).set_properties(**{"font-size": "12px"}).map(
+        # Pink highlight for the best cost
+        lambda _: "background-color:#FFF0F3; color:#FF8FAB; font-weight:600",
+        subset=["Cost/Period (Rp)"]
     )
+    st.dataframe(df_opt_styled, use_container_width=True, height=340)
 
-st.markdown("<hr>", unsafe_allow_html=True)
+hr_styled = "<hr>"
+st.markdown(hr_styled, unsafe_allow_html=True)
 
 
 # ─── FINAL MRP SHEET ──────────────────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
-    <div class="section-icon" style="background:#F0F9FF">📋</div>
+    <div class="section-icon upload">📋</div>
     <div>
         <div class="section-title">Final MRP Sheet</div>
         <div class="section-subtitle">Tabel perencanaan material lengkap hasil optimasi MCP</div>
@@ -616,15 +678,16 @@ for k in range(periods):
 
 df_mrp = pd.DataFrame(mrp_matrix).set_index("Data / Periode")
 
-def style_mrp(df):
+# Pinkish and Soft contrasting colors for MRP table
+def style_mrp_cute(df):
     styles = pd.DataFrame("", index=df.index, columns=df.columns)
     row_colors = {
-        "Gross Requirements (GR)":          "background:#F8FAFC; font-weight:600",
-        "Scheduled Receipts (SR)":           "background:#F8FAFC",
-        "Projected Available Balance (PAB)": "background:#EFF6FF; color:#1D4ED8",
-        "Net Requirements (NR)":             "background:#FFFBEB; color:#92400E; font-weight:600",
-        "Planned Order Receipts (PORec)":    "background:#F0FDF4; color:#065F46; font-weight:600",
-        "Planned Order Releases (PORel)":    "background:#FFF7ED; color:#9A3412; font-weight:600",
+        "Gross Requirements (GR)":          "background:#FFF9FA; font-weight:600", # Lighter pink
+        "Scheduled Receipts (SR)":          "background:#FFF9FA",
+        "Projected Available Balance (PAB)": "background:#FFF0F3; color:#FF8FAB", # Cute Pink accent
+        "Net Requirements (NR)":             "background:#FFFBEB; color:#92400E; font-weight:600", # Orange contrasting
+        "Planned Order Receipts (PORec)":    "background:#F0FDF4; color:#0F5132; font-weight:600", # Green contrasting
+        "Planned Order Releases (PORel)":    "background:#FFF7ED; color:#9A3412; font-weight:600", # Reddish Contrasting
     }
     for row, style in row_colors.items():
         if row in df.index:
@@ -633,18 +696,18 @@ def style_mrp(df):
 
 st.dataframe(
     df_mrp.style
-        .apply(style_mrp, axis=None)
+        .apply(style_mrp_cute, axis=None)
         .format("{:,.0f}"),
     use_container_width=True, height=260
 )
 
-st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown(hr_styled, unsafe_allow_html=True)
 
 
-# ─── COST BREAKDOWN TABLE (BARU) ──────────────────────────────────────────────
+# ─── COST BREAKDOWN TABLE (Pink Variations) ──────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
-    <div class="section-icon" style="background:#FEF3C7">💰</div>
+    <div class="section-icon upload">💰</div>
     <div>
         <div class="section-title">Rincian Biaya per Periode</div>
         <div class="section-subtitle">Setup cost + Holding cost + Total cost tiap periode</div>
@@ -665,44 +728,51 @@ total_row = {
 }
 df_cost_display = pd.concat([df_cost_display, pd.DataFrame([total_row])], ignore_index=True)
 
-def style_cost(df):
+# Pink themed table style
+def style_cost_cute(df):
     styles = pd.DataFrame("", index=df.index, columns=df.columns)
     last = len(df) - 1
-    styles.iloc[last] = "background:#0F172A; color:#F1F5F9; font-weight:700"
+    # Total row (Pink accent background)
+    styles.iloc[last] = "background:#FF8FAB; color:#FFFFFF; font-weight:700" 
+    
     for i in range(len(df)-1):
         if df.iloc[i]["Setup Cost (Rp)"] > 0:
-            styles.iloc[i, df.columns.get_loc("Setup Cost (Rp)")] = "background:#EFF6FF; color:#1D4ED8; font-weight:600"
+            # Highlight Setup Cost column
+            styles.iloc[i, df.columns.get_loc("Setup Cost (Rp)")] = "background:#FFF0F3; color:#FF8FAB; font-weight:600"
         if df.iloc[i]["Holding Cost (Rp)"] > 0:
+            # Highlight Holding Cost column (contrasting orange)
             styles.iloc[i, df.columns.get_loc("Holding Cost (Rp)")] = "background:#FFFBEB; color:#92400E"
+        # Total Cost column (bold)
         styles.iloc[i, df.columns.get_loc("Total Cost (Rp)")] = "font-weight:600"
     return styles
 
-fmt_cost = {
+fmt_cost_display = {
     "GR": "{:,.0f}", "Lot Size (PORec)": "{:,.0f}",
     "Setup Cost (Rp)": "{:,.0f}", "Holding Cost (Rp)": "{:,.0f}", "Total Cost (Rp)": "{:,.0f}"
 }
 
 st.dataframe(
-    df_cost_display.style.apply(style_cost, axis=None).format(fmt_cost, na_rep="-"),
+    df_cost_display.style.apply(style_cost_cute, axis=None).format(fmt_cost_display, na_rep="-"),
     use_container_width=True, height=460
 )
 
+# Cute summary box with pink text
 st.markdown(f"""
-<div class="success-box">
+<div style='background: #FFF9FA; border: 1px solid #FFEDF1; border-left: 5px solid #FF8FAB; border-radius: 12px; padding: 14px 18px; margin-top: 16px; font-size: 13px; color: #8C5260; box-shadow: 0 2px 5px rgba(255,182,193,0.05);'>
     ✅ <strong>Ringkasan Biaya:</strong>
-    Total Setup Cost = <strong>Rp {total_setup:,.0f}</strong> ({total_orders} order) &nbsp;|&nbsp;
-    Total Holding Cost = <strong>Rp {total_holding:,.0f}</strong> &nbsp;|&nbsp;
-    <strong>Grand Total = Rp {grand_total:,.0f}</strong>
+    Total Setup Cost = <strong style='color:#FF8FAB'>Rp {total_setup:,.0f}</strong> ({total_orders} order) &nbsp;|&nbsp;
+    Total Holding Cost = <strong style='color:#C0808F'>Rp {total_holding:,.0f}</strong> &nbsp;|&nbsp;
+    <strong>Grand Total = <strong style='color:#FF8FAB'>Rp {grand_total:,.0f}</strong></strong>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown(hr_styled, unsafe_allow_html=True)
 
 
-# ─── CHARTS ───────────────────────────────────────────────────────────────────
+# ─── CHARTS (Pinkish Themed Charts) ────────────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
-    <div class="section-icon" style="background:#F5F3FF">📈</div>
+    <div class="section-icon upload">📈</div>
     <div>
         <div class="section-title">Visualisasi</div>
         <div class="section-subtitle">Grafik analisis demand, lot sizing, dan biaya</div>
@@ -712,20 +782,26 @@ st.markdown("""
 
 chart_labels = [df_input['Period'].iloc[k] if 'Period' in df_input.columns else f"P{k+1}" for k in range(periods)]
 
+# Cute Plotly Layout Base (White bg, DM Sans font, Soft colors)
+plotly_layout_base = dict(
+    plot_bgcolor="white", paper_bgcolor="white",
+    xaxis=dict(gridcolor="#FFEDF1"), yaxis=dict(gridcolor="#FFEDF1"),
+    font=dict(family="DM Sans", size=11, color="#8C5260"),
+    margin=dict(l=10, r=10, t=50, b=10),
+)
+
 c1, c2 = st.columns(2, gap="large")
 
 with c1:
     fig1 = go.Figure()
-    fig1.add_bar(x=chart_labels, y=mrp_gross_req, name="GR", marker_color="#0EA5E9", opacity=0.85)
-    fig1.add_bar(x=chart_labels, y=mrp_planned_receipts, name="Lot Size (PORec)", marker_color="#10B981", opacity=0.85)
+    # Contrasting colors (Pink Variations / Cute Contouring)
+    fig1.add_bar(x=chart_labels, y=mrp_gross_req, name="GR", marker_color="#FF99AC", marker=dict(line=dict(color="#FF8FAB", width=1)), opacity=0.9)
+    fig1.add_bar(x=chart_labels, y=mrp_planned_receipts, name="Lot Size (PORec)", marker_color="#BDE0FE", marker=dict(line=dict(color="#8CC7FE", width=1)), opacity=0.9)
     fig1.update_layout(
-        title=dict(text="GR vs Lot Size per Periode", font=dict(size=14, family="DM Sans")),
+        title=dict(text="GR vs Lot Size per Periode", font=dict(size=14, family="DM Sans", color="#8C5260")),
         barmode="group", height=320,
-        plot_bgcolor="white", paper_bgcolor="white",
         legend=dict(orientation="h", y=-0.2),
-        margin=dict(l=10, r=10, t=50, b=10),
-        xaxis=dict(gridcolor="#F1F5F9"), yaxis=dict(gridcolor="#F1F5F9"),
-        font=dict(family="DM Sans", size=11)
+        **plotly_layout_base
     )
     st.plotly_chart(fig1, use_container_width=True)
 
@@ -733,16 +809,14 @@ with c2:
     fig2 = go.Figure()
     sc_vals = df_cost["Setup Cost (Rp)"].tolist()
     hc_vals = df_cost["Holding Cost (Rp)"].tolist()
-    fig2.add_bar(x=chart_labels, y=sc_vals, name="Setup Cost", marker_color="#3B82F6", opacity=0.85)
-    fig2.add_bar(x=chart_labels, y=hc_vals, name="Holding Cost", marker_color="#F59E0B", opacity=0.85)
+    # Stacked colors (Cute Contrast)
+    fig2.add_bar(x=chart_labels, y=sc_vals, name="Setup Cost", marker_color="#FF8FAB", opacity=0.9)
+    fig2.add_bar(x=chart_labels, y=hc_vals, name="Holding Cost", marker_color="#C0808F", opacity=0.9)
     fig2.update_layout(
-        title=dict(text="Setup vs Holding Cost per Periode", font=dict(size=14, family="DM Sans")),
+        title=dict(text="Setup vs Holding Cost per Periode", font=dict(size=14, family="DM Sans", color="#8C5260")),
         barmode="stack", height=320,
-        plot_bgcolor="white", paper_bgcolor="white",
         legend=dict(orientation="h", y=-0.2),
-        margin=dict(l=10, r=10, t=50, b=10),
-        xaxis=dict(gridcolor="#F1F5F9"), yaxis=dict(gridcolor="#F1F5F9"),
-        font=dict(family="DM Sans", size=11)
+        **plotly_layout_base
     )
     st.plotly_chart(fig2, use_container_width=True)
 
@@ -750,54 +824,63 @@ c3, c4 = st.columns(2, gap="large")
 
 with c3:
     fig3 = go.Figure()
+    # Purple accented line chart for balance flow
     fig3.add_scatter(
         x=chart_labels, y=mrp_projected_bal,
         mode="lines+markers",
-        line=dict(color="#8B5CF6", width=2.5),
-        marker=dict(size=7, color="#8B5CF6"),
-        fill="tozeroy", fillcolor="rgba(139,92,246,0.08)",
+        line=dict(color="#FF8FAB", width=3), # Accent pink
+        marker=dict(size=8, color="#FF8FAB", line=dict(color="white", width=2)), # Marker Contour white
+        fill="tozeroy", fillcolor="rgba(255,143,171,0.08)", # Lighter pink fill
         name="PAB"
     )
-    fig3.add_hline(y=safety_stock, line_dash="dash", line_color="#EF4444", line_width=1.5,
-                   annotation_text=f"Safety Stock ({safety_stock:,})", annotation_position="top left")
+    # Contrasting Safety stock line (soft red)
+    fig3.add_hline(y=safety_stock, line_dash="dash", line_color="#FF99AC", line_width=1.5,
+                   annotation_text=f"Safety Stock ({safety_stock:,})", annotation_position="top left", annotation_font=dict(color="#FF99AC"))
     fig3.update_layout(
-        title=dict(text="Projected Available Balance (PAB)", font=dict(size=14, family="DM Sans")),
-        height=280, plot_bgcolor="white", paper_bgcolor="white",
-        margin=dict(l=10, r=10, t=50, b=10),
-        xaxis=dict(gridcolor="#F1F5F9"), yaxis=dict(gridcolor="#F1F5F9"),
-        font=dict(family="DM Sans", size=11)
+        title=dict(text="Projected Available Balance (PAB)", font=dict(size=14, family="DM Sans", color="#8C5260")),
+        height=320,
+        **plotly_layout_base
     )
     st.plotly_chart(fig3, use_container_width=True)
 
 with c4:
     if total_setup + total_holding > 0:
+        # Contrasting Pie colors
         fig4 = go.Figure(go.Pie(
             labels=["Setup Cost", "Holding Cost"],
             values=[total_setup, total_holding],
-            hole=0.55,
-            marker=dict(colors=["#3B82F6", "#F59E0B"]),
+            hole=0.6,
+            marker=dict(colors=["#FF8FAB", "#C0808F"]), # Main pink and darker soft brown contrast
             textinfo="label+percent",
-            textfont=dict(family="DM Sans", size=12),
+            textfont=dict(family="DM Sans", size=12, color="white"), # White font for dark backgrounds
+            direction="clockwise", # Cute movement
         ))
+        # Value formatter inside Pie
+        def fmt_grand_simple_chart(val):
+             if val >= 1_000_000:
+                 return f"Rp{val/1_000_000:.1f}jt"
+             return f"Rp{val/1000:.1f}rb"
+
         fig4.update_layout(
-            title=dict(text="Komposisi Biaya Total", font=dict(size=14, family="DM Sans")),
-            height=280, paper_bgcolor="white",
+            title=dict(text="Komposisi Biaya Total", font=dict(size=14, family="DM Sans", color="#8C5260")),
+            height=320, paper_bgcolor="white",
             margin=dict(l=10, r=10, t=50, b=10),
-            font=dict(family="DM Sans"),
+            font=dict(family="DM Sans", color="#8C5260"),
+            # Center annotation (Grand Total Value in Center)
             annotations=[dict(
-                text=f"Rp{grand_total/1000:.0f}rb" if grand_total < 1_000_000 else f"Rp{grand_total/1_000_000:.1f}jt",
-                x=0.5, y=0.5, font_size=13, showarrow=False, font=dict(family="DM Sans", color="#0F172A")
+                text=fmt_grand_simple_chart(grand_total),
+                x=0.5, y=0.5, font_size=15, showarrow=False, font=dict(family="DM Sans", color="#FF8FAB", weight="bold")
             )]
         )
         st.plotly_chart(fig4, use_container_width=True)
 
-st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown(hr_styled, unsafe_allow_html=True)
 
 
 # ─── DOWNLOAD ─────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
-    <div class="section-icon" style="background:#F0FDF4">📥</div>
+    <div class="section-icon upload">📥</div>
     <div>
         <div class="section-title">Download Laporan</div>
         <div class="section-subtitle">Export semua hasil analisis dalam satu file CSV</div>
@@ -805,18 +888,19 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# Cute Excel/CSV builder with sheets
 csv_buffer = BytesIO()
-with pd.ExcelWriter(csv_buffer, engine='xlsxwriter') if False else BytesIO() as buf:
-    pass
 
-# Build combined CSV
-df_mrp_reset = df_mrp.reset_index()
-df_cost_dl   = df_cost_display.copy()
+# Reset index for sheets compatibility
+df_mrp_dl   = df_mrp.reset_index()
+df_cost_dl_full = df_cost_display.copy()
 
-csv_out = BytesIO()
-with pd.ExcelWriter(csv_out, engine='openpyxl') as writer:
-    df_mrp_reset.to_excel(writer, sheet_name="Final MRP Sheet", index=False)
-    df_cost_dl.to_excel(writer, sheet_name="Rincian Biaya", index=False)
+csv_simple_all_reset = pd.concat([df_mrp_dl, pd.DataFrame(optimal_combinations), pd.DataFrame(all_iterations)], axis=1)
+
+output_excel_buffer = BytesIO()
+with pd.ExcelWriter(output_excel_buffer, engine='xlsxwriter') as writer:
+    df_mrp_dl.to_excel(writer, sheet_name="Final MRP Sheet", index=False)
+    df_cost_dl_full.to_excel(writer, sheet_name="Rincian Biaya", index=False)
     pd.DataFrame(optimal_combinations).to_excel(writer, sheet_name="Optimal Combinations", index=False)
     pd.DataFrame(all_iterations).to_excel(writer, sheet_name="All Iterations", index=False)
 
@@ -824,22 +908,23 @@ col_dl1, col_dl2, col_dl3 = st.columns([2,2,4])
 with col_dl1:
     st.download_button(
         label="📥 Download Excel Lengkap",
-        data=csv_out.getvalue(),
+        data=output_excel_buffer.getvalue(),
         file_name="mcp_report_lengkap.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 with col_dl2:
-    csv_simple = BytesIO()
-    df_mrp_reset.to_csv(csv_simple, index=False)
+    csv_simple_data = BytesIO()
+    df_mrp_dl.to_csv(csv_simple_data, index=False)
     st.download_button(
         label="📄 Download MRP Sheet (CSV)",
-        data=csv_simple.getvalue(),
+        data=csv_simple_data.getvalue(),
         file_name="final_mrp_sheet.csv",
         mime="text/csv"
     )
 
+# Softened footer text
 st.markdown("""
-<div style='margin-top:32px; text-align:center; font-size:11px; color:#CBD5E1'>
+<div class="cute-footer">
     MRP · MCP Optimizer — Material Requirements Planning Dashboard
 </div>
 """, unsafe_allow_html=True)
