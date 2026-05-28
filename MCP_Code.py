@@ -420,11 +420,21 @@ if df_input is None:
 
 
 # ─── Read & Process ───────────────────────────────────────────────────────────
+if df_input is not None:
+    # 1. Clear out any row where the user didn't enter a Period or Gross Requirement
+    df_input = df_input.dropna(subset=['Period', 'GR'])
+    
+    # 2. Drop rows if the user accidentally typed "None" or left an artifact string
+    df_input = df_input[df_input['Period'].astype(str).str.strip().str.lower() != 'none']
+    df_input = df_input[df_input['GR'].astype(str).str.strip().str.lower() != 'none']
+
+# Re-evaluate planning horizon periods after rigorous cleaning
 periods       = len(df_input)
 periods_label = df_input['Period'].tolist() if 'Period' in df_input.columns else [f"P{i+1}" for i in range(periods)]
-gross_req     = df_input['GR'].tolist()
-scheduled_rec = df_input['Scheduled_Receipts'].tolist()
 
+# 3. Securely parse data into standard integer formats to protect the mathematical loops
+gross_req     = pd.to_numeric(df_input['GR'], errors='coerce').fillna(0).astype(int).tolist()
+scheduled_rec = pd.to_numeric(df_input['Scheduled_Receipts'], errors='coerce').fillna(0).astype(int).tolist()
 
 # ── MCP Algorithm ─────────────────────────────────────────────────────────────
 all_iterations       = []
