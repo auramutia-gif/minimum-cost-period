@@ -421,20 +421,43 @@ if df_input is None:
 
 # ─── Read & Process ───────────────────────────────────────────────────────────
 if df_input is not None:
-    # 1. Clear out any row where the user didn't enter a Period or Gross Requirement
-    df_input = df_input.dropna(subset=['Period', 'GR'])
-    
-    # 2. Drop rows if the user accidentally typed "None" or left an artifact string
-    df_input = df_input[df_input['Period'].astype(str).str.strip().str.lower() != 'none']
-    df_input = df_input[df_input['GR'].astype(str).str.strip().str.lower() != 'none']
+    # 1. Clean columns by stripping whitespace and removing completely empty rows
+    df_input.columns = df_input.columns.str.strip()
+    df_input = df_input.dropna(how='all')
 
-# Re-evaluate planning horizon periods after rigorous cleaning
-periods       = len(df_input)
-periods_label = df_input['Period'].tolist() if 'Period' in df_input.columns else [f"P{i+1}" for i in range(periods)]
+    # 2. Safely find or create the Period column
+    if 'Period' in df_input.columns:
+        # Filter out rows where Period is blank or contains a string literal 'None'
+        df_input = df_input[df_input['Period'].notna()]
+        df_input = df_input[df_input['Period'].astype(str).str.strip().str.lower() != 'none']
+        periods_label = df_input['Period'].astype(str).tolist()
+    else:
+        # Fallback if CSV uploaded has no 'Period' column name
+        periods_label = [f"P{i+1}" for i in range(len(df_input))]
 
-# 3. Securely parse data into standard integer formats to protect the mathematical loops
-gross_req     = pd.to_numeric(df_input['GR'], errors='coerce').fillna(0).astype(int).tolist()
-scheduled_rec = pd.to_numeric(df_input['Scheduled_Receipts'], errors='coerce').fillna(0).astype(int).tolist()
+    # 3. Safely parse Gross Requirements (GR)
+    if 'GR' in df_input.columns:
+        # Drop rows where GR is completely missing
+        df_input = df_input.dropna(subset=['GR'])
+        df_input = df_input[df_input['GR'].astype(str).str.strip().str.lower() != 'none']
+        gross_req = pd.to_numeric(df_input['GR'], errors='coerce').fillna(0).astype(int).tolist()
+    else:
+        gross_req = [0] * len(df_input)
+
+    # 4. Safely parse Scheduled Receipts (SR)
+    if 'Scheduled_Receipts' in df_input.columns:
+        scheduled_rec = pd.to_numeric(df_input['Scheduled_Receipts'], errors='coerce').fillna(0).astype(int).tolist()
+    elif 'SR' in df_input.columns:
+        scheduled_rec = pd.to_numeric(df_input['SR'], errors='coerce').fillna(0).astype(int).tolist()
+    else:
+        # Fill with zeros if the user left the column out entirely
+        scheduled_rec = [0] * len(df_input)
+
+    # Sync planning horizon length
+    periods = len(gross_req)
+
+    # Ensure periods match our labels to prevent indexing misalignment
+    periods_label = periods_label[:periods]
 
 # ── MCP Algorithm ─────────────────────────────────────────────────────────────
 all_iterations       = []
