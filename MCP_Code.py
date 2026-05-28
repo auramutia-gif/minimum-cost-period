@@ -329,58 +329,58 @@ df_input = None
 with tab_manual:
     st.markdown("""
     <div class="info-box">
-        💡 <strong>Manual Entry.</strong> Isi tabel di bawah ini. <br>
-        • Gunakan tombol <b>+ Add row</b> di bagian bawah tabel untuk menambah baris periode baru.<br>
-        • Untuk <b>menghapus baris</b>, klik/centang kotak di paling kiri baris yang ingin dihapus, lalu tekan tombol <b>Delete</b> di keyboard Anda.
+        💡 <strong>Manual Entry.</strong> Fill out the table below. <br>
+        • Click the <b>+ Add row</b> button at the bottom of the table to insert a new period.<br>
+        • To <b>delete a row</b>, click/check the box on the leftmost side of the row you want to remove, then press the <b>Delete</b> key on your keyboard.
     </div>
     """, unsafe_allow_html=True)
 
-    # PERBAIKAN: Membuat struktur tabel awal yang benar-benar kosong tanpa nilai bawaan
+    # Creating an empty baseline structure with no pre-filled values
     default_data = pd.DataFrame(columns=["Period", "GR", "Scheduled_Receipts"])
 
     edited_df = st.data_editor(
         default_data,
-        num_rows="dynamic", # Mengaktifkan tombol (+ Add row) dan fitur hapus baris bawaan Streamlit
+        num_rows="dynamic", # Enables Streamlit's built-in row addition and deletion UI
         use_container_width=True,
         column_config={
             "Period": st.column_config.TextColumn(
                 "Period", 
-                help="Contoh: P1, W1, Jan", 
+                help="e.g., P1, W1, Jan, Week 1", 
                 width="small",
-                required=True # Memastikan kolom periode wajib diisi jika baris ditambah
+                required=True # Ensures the period column cannot be left empty when a row is added
             ),
             "GR": st.column_config.NumberColumn(
                 "Gross Requirements (GR)", 
                 min_value=0, 
                 step=1, 
                 format="%d",
-                help="Masukkan nilai GR (Angka)"
+                help="Enter the GR value (Numerical)"
             ),
             "Scheduled_Receipts": st.column_config.NumberColumn(
                 "Scheduled Receipts (SR)", 
                 min_value=0, 
                 step=1, 
                 format="%d",
-                help="Masukkan nilai SR (Angka)"
+                help="Enter the SR value (Numerical)"
             ),
         },
         height=420,
     )
 
     if st.button("▶  Run MCP with Manual Data", type="primary"):
-        # PERBAIKAN EXTRA: Bersihkan baris yang mungkin dibuat tapi belum diisi nilainya sama sekali
+        # Extra Validation: Clean up rows that might have been added but left completely empty
         if edited_df is not None and len(edited_df) > 0:
             cleaned_df = edited_df.dropna(subset=['Period', 'GR'])
             if len(cleaned_df) < 1:
-                st.markdown('<div class="warn-box">⚠️ Mohon isi kolom Period dan GR minimal untuk satu baris sebelum menjalankan program.</div>', unsafe_allow_html=True)
+                st.markdown('<div class="warn-box">⚠️ Please fill in at least the "Period" and "GR" columns for one row before running the optimization.</div>', unsafe_allow_html=True)
             else:
                 df_input = cleaned_df.copy()
                 st.session_state["df_input"] = df_input
                 st.session_state["source"] = "manual"
-                st.rerun() # Memaksa aplikasi refresh agar data langsung dihitung
+                st.rerun() # Forces the app to refresh and instantly compute the results
         else:
-            st.markdown('<div class="warn-box">⚠️ Silakan klik "+ Add row" dan isi data periode terlebih dahulu.</div>', unsafe_allow_html=True)
-
+            st.markdown('<div class="warn-box">⚠️ Please click "+ Add row" and enter your period data first.</div>', unsafe_allow_html=True)
+            
 # ── Tab 2: CSV Upload ─────────────────────────────────────────────────────────
 with tab_upload:
     st.markdown("""
