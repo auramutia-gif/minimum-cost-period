@@ -160,8 +160,6 @@ st.dataframe(
     use_container_width=True
 )
         
-        st.markdown("<hr>", unsafe_allow_html=True)
-        
         # ─── VISUALISASI CHART ────────────────────────────────────────────────
         st.markdown("""<div class="section-header"><div class="section-title">📈 Visualisasi Penjadwalan</div></div>""", unsafe_allow_html=True)
         
