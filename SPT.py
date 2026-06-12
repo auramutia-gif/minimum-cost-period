@@ -105,10 +105,8 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         df_jobs = edited_df.dropna().copy()
         
         # ─── SPT Calculation Logic ────────────────────────────────────────────
-        # 1. Sort berdasarkan Processing Time (Esensi Utama Aturan SPT)
         df_spt = df_jobs.sort_values(by="Processing_Time", ascending=True).reset_index(drop=True)
         
-        # 2. Hitung Waktu Alir / Completion Time (C)
         start_times = []
         comp_times = []
         current_time = 0
@@ -121,11 +119,10 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         df_spt["Start_Time"] = start_times
         df_spt["Completion_Time"] = comp_times
         
-        # 3. Hitung Lateness (L) dan Tardiness (T)
         df_spt["Lateness"] = df_spt["Completion_Time"] - df_spt["Due_Date"]
         df_spt["Tardiness"] = df_spt["Lateness"].apply(lambda x: max(0, x))
         
-        # ─── Hitung Metrik Performa Penjadwalan ────────────────────────────────
+        # ─── Hitung Metrik Performa ───────────────────────────────────────────
         mean_flow_time = df_spt["Completion_Time"].mean()
         max_tardiness = df_spt["Tardiness"].max()
         mean_tardiness = df_spt["Tardiness"].mean()
@@ -149,16 +146,18 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         # ─── TABEL HASIL URUTAN SPT ───────────────────────────────────────────
         st.markdown("**Urutan Pengerjaan Hasil Optimasi SPT**")
         
-        # Format penamaan urutan / sequence
         df_spt["Sequence"] = [f"Urutan {i+1}" for i in range(len(df_spt))]
         df_display = df_spt.set_index("Sequence")[["Job_Name", "Processing_Time", "Due_Date", "Start_Time", "Completion_Time", "Lateness", "Tardiness"]]
-      
-st.dataframe(
-    df_display.style
-    .map(lambda x: "background-color: #F3E8FF; color: #6B21A8;" if x > 0 else "", subset=["Processing_Time"])
-    .map(lambda x: "color: #DC2626; font-weight: bold;" if x > 0 else "color: #16A34A;", subset=["Tardiness"]),
-    use_container_width=True
-)
+        
+        # Menggunakan Cara 2 (Tanpa Matplotlib) agar aman dari error library
+        st.dataframe(
+            df_display.style
+            .map(lambda x: "background-color: #F3E8FF; color: #6B21A8;" if x > 0 else "", subset=["Processing_Time"])
+            .map(lambda x: "color: #DC2626; font-weight: bold;" if x > 0 else "color: #16A34A;", subset=["Tardiness"]),
+            use_container_width=True
+        )
+        
+        st.markdown("<hr>", unsafe_allow_html=True)
         
         # ─── VISUALISASI CHART ────────────────────────────────────────────────
         st.markdown("""<div class="section-header"><div class="section-title">📈 Visualisasi Penjadwalan</div></div>""", unsafe_allow_html=True)
@@ -166,7 +165,6 @@ st.dataframe(
         c1, c2 = st.columns(2, gap="large")
         
         with c1:
-            # 1. Gantt Chart Timeline Pengerjaan Machine
             fig_gantt = go.Figure()
             for idx, row in df_spt.iterrows():
                 fig_gantt.add_trace(go.Bar(
@@ -191,7 +189,6 @@ st.dataframe(
             st.plotly_chart(fig_gantt, use_container_width=True)
             
         with c2:
-            # 2. Bar Chart Perbandingan Completion Time vs Due Date
             fig_comp = go.Figure()
             fig_comp.add_bar(x=df_spt["Job_Name"], y=df_spt["Due_Date"], name="Due Date", marker_color="#A070D4")
             fig_comp.add_bar(x=df_spt["Job_Name"], y=df_spt["Completion_Time"], name="Completion Time", marker_color="#53357B")
