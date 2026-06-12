@@ -152,12 +152,13 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         # Format penamaan urutan / sequence
         df_spt["Sequence"] = [f"Urutan {i+1}" for i in range(len(df_spt))]
         df_display = df_spt.set_index("Sequence")[["Job_Name", "Processing_Time", "Due_Date", "Start_Time", "Completion_Time", "Lateness", "Tardiness"]]
-        
-        st.dataframe(
-            df_display.style.background_gradient(cmap="Purples", subset=["Processing_Time"])
-            .map(lambda x: "color: red; font-weight: bold;" if x > 0 else "color: green;", subset=["Tardiness"]),
-            use_container_width=True
-        )
+      
+st.dataframe(
+    df_display.style
+    .map(lambda x: "background-color: #F3E8FF; color: #6B21A8;" if x > 0 else "", subset=["Processing_Time"])
+    .map(lambda x: "color: #DC2626; font-weight: bold;" if x > 0 else "color: #16A34A;", subset=["Tardiness"]),
+    use_container_width=True
+)
         
         st.markdown("<hr>", unsafe_allow_html=True)
         
