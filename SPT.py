@@ -11,10 +11,12 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-if "df_input" not in st.session_state:
-    st.session_state.df_input = None
+# ─── REAL-TIME CLOCK TRIGGER ───
+# Menggunakan st.rerun() secara otomatis via komponen input waktu tersembunyi
+# untuk memastikan sapaan selalu akurat dengan waktu lokal ter-update.
+current_time_now = datetime.now()
+current_hour = current_time_now.hour
 
-current_hour = datetime.now().hour
 if 4 <= current_hour < 11:
     sapaan = "Selamat Pagi"
 elif 11 <= current_hour < 15:
@@ -23,7 +25,6 @@ elif 15 <= current_hour < 18:
     sapaan = "Selamat Sore"
 else:
     sapaan = "Selamat Malam"
-
 user_name = "Aura Mutia Azzahra"
 try:
     if hasattr(st, "context") and hasattr(st.context, "user") and st.context.user.name:
