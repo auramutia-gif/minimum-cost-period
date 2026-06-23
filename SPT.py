@@ -6,26 +6,30 @@ st.set_page_config(
     page_title="Production Scheduling · SPT Optimizer",
     page_icon="⏱️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# ─── Custom CSS (Pastel Palette Theme) ─────────────────────────────────────────
+# ─── Custom CSS (Pastel Palette Theme - No Sidebar) ───────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
 html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
 .stApp { background: #FAF8F6; }
-[data-testid="stSidebar"] { background: #4A3E4D !important; border-right: 1px solid #D6C7D9; }
-[data-testid="stSidebar"] * { color: #F5EFF6 !important; }
-[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 { color: #FFFFFF !important; }
 
 .hero-banner {
     background: linear-gradient(135deg, #A896B0 0%, #C3B1CE 50%, #E2D4E7 100%);
-    border-radius: 16px; padding: 30px 35px; margin-bottom: 24px;
+    border-radius: 16px; padding: 30px 35px; margin-bottom: 20px;
 }
 .hero-title { font-size: 26px; font-weight: 600; color: #FFFFFF; margin: 0 0 6px; }
 .hero-sub { font-size: 13px; color: #F5EFF6; margin: 0; }
+
+.spt-explainer {
+    background: #FFFFFF; border: 1px solid #E5DEE6; border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(168,150,176,0.05);
+}
+.spt-explainer-title { font-size: 14px; font-weight: 600; color: #4A3E4D; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.spt-explainer-text { font-size: 13px; color: #64536D; line-height: 1.5; }
 
 .metric-card {
     background: white; border-radius: 12px; padding: 18px 20px;
@@ -46,23 +50,22 @@ hr { border-color: #E5DEE6 !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# ─── Sidebar Input ────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown("""
-    <div style='padding: 20px 0 16px'>
-        <div style='font-size:22px; font-weight:700; color:#FFFFFF;'>SPT Scheduler</div>
-        <div style='font-size:12px; color:#D6C7D9; margin-top:3px'>Shortest Processing Time Rule</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    st.write("⏱️ **Aturan SPT:** Pekerjaan dengan waktu proses terpendek akan dijadwalkan terlebih dahulu untuk meminimalkan *Mean Lateness*.")
-
 # ─── Hero Banner ──────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero-banner">
     <div class="hero-title">⏱️ Shortest Processing Time (SPT) Dashboard</div>
     <div class="hero-sub">Optimasi urutan penjadwalan tunggal (Single Machine Scheduling) untuk minimasi Mean Lateness</div>
+</div>
+""", unsafe_allow_html=True)
+
+# ─── Upperbar Explanation (Penjelasan Singkat Aturan SPT) ──────────────────────
+st.markdown("""
+<div class="spt-explainer">
+    <div class="spt-explainer-title">⏱️ Aturan Shortest Processing Time (SPT)</div>
+    <div class="spt-explainer-text">
+        Pekerjaan dengan <b>waktu proses terpendek</b> akan dijadwalkan terlebih dahulu. 
+        Aturan ini terbukti secara matematis optimal dalam meminimalkan <i>Mean Flow Time</i>, <i>Mean Work-in-Process</i>, dan <i>Mean Lateness</i> pada sistem mesin tunggal.
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -138,7 +141,7 @@ else:
         except Exception as e:
             st.error(f"❌ Terjadi kesalahan saat membaca file: {e}")
 
-# ─── Prosedur Perhitungan dan output ──────────────────────────────────────────
+# ─── Prosedur Perhitungan dan Output ──────────────────────────────────────────
 if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
     if df_input_final is not None and len(df_input_final) > 0:
         
@@ -164,12 +167,9 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         # Lateness = Saat Selesai (c) - Due Date (d)
         df_spt["Lateness"] = df_spt["Completion_Time"] - df_spt["Due_Date"]
         
-        # ─── TABEL HASIL URUTAN SPT ───────────────────────────────────────────
+        # ─── TABEL HASIL URUTAN SPT (Langsung Tabel) ──────────────────────────
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("### Penyelesaian :")
-        st.markdown("1. Urutan waktu proses dari yang terkecil sampai yang terbesar")
-        st.markdown("2. Hitung saat selesai (kolom c)")
-        st.markdown("3. Hitung Lateness = saat selesai – due date = c - d")
+        st.markdown("""<div class="section-header"><div class="section-title">📊 Tabel Urutan Penyelesaian SPT</div></div>""", unsafe_allow_html=True)
         
         df_display = df_spt.copy()
         df_display.columns = ["Job", "Waktu proses", "Due date (d)", "Start_Time", "Saat selesai (c)", "Lateness (c-d)"]
