@@ -16,7 +16,8 @@ st.set_page_config(
 if "df_input" not in st.session_state:
     st.session_state.df_input = None
 
-# Logika Waktu Real-Time Sapaan
+# ─── LOGIKAL WAKTU & USER REAL-TIME (Dinamis Setiap Rerender) ────────────────
+# Menggunakan datetime.now().hour secara langsung agar selalu dievaluasi ulang setiap ada perubahan di web
 current_hour = datetime.now().hour
 if 4 <= current_hour < 11:
     sapaan = "Selamat Pagi"
@@ -27,7 +28,9 @@ elif 15 <= current_hour < 18:
 else:
     sapaan = "Selamat Malam"
 
-user_name = "Aura Mutia Azzahra"
+# Mengambil nama user yang sedang login di Streamlit secara dinamis
+# Jika tidak ada user yang login (misal dijalankan di komputer lokal), default-nya menggunakan "Guest User"
+user_name = st.context.user.name if st.context.user.name else "Guest User"
 
 # ─── ADVANCED CUSTOM UI DESAIN (Premium Soft Pastel Pink Theme) ──────────────
 st.markdown("""
