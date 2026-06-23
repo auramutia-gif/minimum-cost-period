@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 
 st.set_page_config(
@@ -10,40 +9,40 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ─── Custom CSS (Matching Style) ──────────────────────────────────────────────
+# ─── Custom CSS (Pastel Palette Theme) ─────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
 html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
-.stApp { background: #FDF6F9; }
-[data-testid="stSidebar"] { background: #2A1A3D !important; border-right: 1px solid #452A5C; }
-[data-testid="stSidebar"] * { color: #E8D6F5 !important; }
-[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 { color: #F5E8FD !important; }
+.stApp { background: #FAF8F6; }
+[data-testid="stSidebar"] { background: #4A3E4D !important; border-right: 1px solid #D6C7D9; }
+[data-testid="stSidebar"] * { color: #F5EFF6 !important; }
+[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 { color: #FFFFFF !important; }
 
 .hero-banner {
-    background: linear-gradient(135deg, #2A1A3D 0%, #53357B 55%, #C278E8 100%);
-    border-radius: 16px; padding: 36px 40px; margin-bottom: 28px;
+    background: linear-gradient(135deg, #A896B0 0%, #C3B1CE 50%, #E2D4E7 100%);
+    border-radius: 16px; padding: 30px 35px; margin-bottom: 24px;
 }
-.hero-title { font-size: 28px; font-weight: 600; color: #F5E8FD; margin: 0 0 6px; }
-.hero-sub { font-size: 14px; color: #DCC2F5; margin: 0; }
+.hero-title { font-size: 26px; font-weight: 600; color: #FFFFFF; margin: 0 0 6px; }
+.hero-sub { font-size: 13px; color: #F5EFF6; margin: 0; }
 
 .metric-card {
     background: white; border-radius: 12px; padding: 18px 20px;
-    border: 1px solid #E8D6F5; box-shadow: 0 1px 6px rgba(130,80,180,0.07);
+    border: 1px solid #E5DEE6; box-shadow: 0 2px 8px rgba(168,150,176,0.1);
+    text-align: center;
 }
-.metric-card.purple { border-top: 3px solid #C278E8; }
-.metric-card.lavender { border-top: 3px solid #A070D4; }
-.metric-card.coral { border-top: 3px solid #E878A0; }
+.metric-card.pastel-blue { border-top: 4px solid #AEC6CF; }
+.metric-card.pastel-pink { border-top: 4px solid #FFB7B2; }
+.metric-card.pastel-green { border-top: 4px solid #BFFCC6; }
 
-.metric-label { font-size: 11px; font-weight: 600; color: #A084C0; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-.metric-value { font-size: 24px; font-weight: 600; color: #2A1A3D; font-family: 'DM Mono', monospace; }
-.metric-sub { font-size: 11px; color: #A084C0; margin-top: 3px; }
+.metric-label { font-size: 12px; font-weight: 600; color: #8A7A93; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.metric-value { font-size: 22px; font-weight: 600; color: #4A3E4D; font-family: 'DM Mono', monospace; }
 
 .section-header { display: flex; align-items: center; gap: 10px; margin: 24px 0 14px; }
-.section-title { font-size: 16px; font-weight: 600; color: #2A1A3D; }
-.info-box { background: #F7F0FF; border-left: 4px solid #C278E8; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #53357B; }
-hr { border-color: #E8D6F5 !important; }
+.section-title { font-size: 16px; font-weight: 600; color: #4A3E4D; }
+.info-box { background: #F3EEF5; border-left: 4px solid #C3B1CE; border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #64536D; }
+hr { border-color: #E5DEE6 !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -51,19 +50,19 @@ hr { border-color: #E8D6F5 !important; }
 with st.sidebar:
     st.markdown("""
     <div style='padding: 20px 0 16px'>
-        <div style='font-size:22px; font-weight:700; color:#F5E8FD;'>SPT Scheduler</div>
-        <div style='font-size:12px; color:#A084C0; margin-top:3px'>Shortest Processing Time Rule</div>
+        <div style='font-size:22px; font-weight:700; color:#FFFFFF;'>SPT Scheduler</div>
+        <div style='font-size:12px; color:#D6C7D9; margin-top:3px'>Shortest Processing Time Rule</div>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("<hr>", unsafe_allow_html=True)
-    st.write("⏱️ **Aturan SPT:** Pekerjaan dengan waktu proses terpendek akan dijadwalkan terlebih dahulu untuk meminimalkan *Mean Flow Time*.")
+    st.write("⏱️ **Aturan SPT:** Pekerjaan dengan waktu proses terpendek akan dijadwalkan terlebih dahulu untuk meminimalkan *Mean Lateness*.")
 
 # ─── Hero Banner ──────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero-banner">
     <div class="hero-title">⏱️ Shortest Processing Time (SPT) Dashboard</div>
-    <div class="hero-sub">Optimasi urutan penjadwalan job tunggal (Single Machine Scheduling) secara otomatis</div>
+    <div class="hero-sub">Optimasi urutan penjadwalan tunggal (Single Machine Scheduling) untuk minimasi Mean Lateness</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -76,35 +75,36 @@ st.markdown("""
 
 st.markdown("""
 <div class="info-box">
-    💡 <b>Petunjuk:</b> Isikan daftar pekerjaan, waktu proses (Processing Time), dan batas waktu penyelesaian (Due Date). 
-    Anda bisa menambah baris baru di bagian bawah tabel.
+    💡 <b>Petunjuk:</b> Isikan daftar pekerjaan pada baris kosong di bawah ini. Masukkan Nama Job, Waktu Proses (Waktu), dan Due Date. 
+    Gunakan tombol <b>"Enter"</b> atau klik sel di bawahnya untuk menambah baris baru.
 </div>
 """, unsafe_allow_html=True)
 
-# Default baseline data
-init_data = pd.DataFrame([
-    {"Job_Name": "Job A", "Processing_Time": 5, "Due_Date": 10},
-    {"Job_Name": "Job B", "Processing_Time": 2, "Due_Date": 6},
-    {"Job_Name": "Job C", "Processing_Time": 8, "Due_Date": 15},
-    {"Job_Name": "Job D", "Processing_Time": 3, "Due_Date": 8},
-])
+# Dataframe baseline dikosongkan sesuai permintaan
+init_data = pd.DataFrame(columns=["Job_Name", "Processing_Time", "Due_Date"])
 
 edited_df = st.data_editor(
     init_data,
     num_rows="dynamic",
     use_container_width=True,
     column_config={
-        "Job_Name": st.column_config.TextColumn("Nama Job / Pekerjaan", required=True),
-        "Processing_Time": st.column_config.NumberColumn("Processing Time (Jam/Hari)", min_value=1, step=1, format="%d"),
-        "Due_Date": st.column_config.NumberColumn("Due Date (Batas Waktu)", min_value=1, step=1, format="%d")
+        "Job_Name": st.column_config.TextColumn("Job", required=True),
+        "Processing_Time": st.column_config.NumberColumn("Waktu (Waktu Proses)", min_value=1, step=1, format="%d"),
+        "Due_Date": st.column_config.NumberColumn("Due Date", min_value=1, step=1, format="%d")
     }
 )
 
 if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
-    if edited_df is not None and len(edited_df) > 0:
-        df_jobs = edited_df.dropna().copy()
+    # Validasi agar tidak error saat data kosong
+    if edited_df is not None and len(edited_df) > 0 and not edited_df.dropna(subset=["Job_Name", "Processing_Time", "Due_Date"]).empty:
+        df_jobs = edited_df.dropna(subset=["Job_Name", "Processing_Time", "Due_Date"]).copy()
+        
+        # Pastikan tipe data numerik
+        df_jobs["Processing_Time"] = df_jobs["Processing_Time"].astype(int)
+        df_jobs["Due_Date"] = df_jobs["Due_Date"].astype(int)
         
         # ─── SPT Calculation Logic ────────────────────────────────────────────
+        # Urutkan waktu proses dari yang terkecil sampai terbesar
         df_spt = df_jobs.sort_values(by="Processing_Time", ascending=True).reset_index(drop=True)
         
         start_times = []
@@ -113,95 +113,113 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         
         for idx, row in df_spt.iterrows():
             start_times.append(current_time)
-            current_time += int(row["Processing_Time"])
+            current_time += row["Processing_Time"]
             comp_times.append(current_time)
             
         df_spt["Start_Time"] = start_times
         df_spt["Completion_Time"] = comp_times
         
+        # Lateness = Saat Selesai (c) - Due Date (d)
         df_spt["Lateness"] = df_spt["Completion_Time"] - df_spt["Due_Date"]
-        df_spt["Tardiness"] = df_spt["Lateness"].apply(lambda x: max(0, x))
-        
-        # ─── Hitung Metrik Performa ───────────────────────────────────────────
-        mean_flow_time = df_spt["Completion_Time"].mean()
-        max_tardiness = df_spt["Tardiness"].max()
-        mean_tardiness = df_spt["Tardiness"].mean()
-        num_tardy_jobs = sum(df_spt["Tardiness"] > 0)
-        
-        # ─── METRIC CARDS ─────────────────────────────────────────────────────
-        st.markdown("""<div class="section-header"><div class="section-title">📊 Performa Penjadwalan SPT</div></div>""", unsafe_allow_html=True)
-        
-        m1, m2, m3, m4 = st.columns(4)
-        with m1:
-            st.markdown(f"""<div class="metric-card purple"><div class="metric-label">Mean Flow Time</div><div class="metric-value">{mean_flow_time:.2f}</div><div class="metric-sub">Rata-rata waktu alir job</div></div>""", unsafe_allow_html=True)
-        with m2:
-            st.markdown(f"""<div class="metric-card lavender"><div class="metric-label">Mean Tardiness</div><div class="metric-value">{mean_tardiness:.2f}</div><div class="metric-sub">Rata-rata keterlambatan</div></div>""", unsafe_allow_html=True)
-        with m3:
-            st.markdown(f"""<div class="metric-card coral"><div class="metric-label">Max Tardiness</div><div class="metric-value">{max_tardiness}</div><div class="metric-sub">Keterlambatan maksimal</div></div>""", unsafe_allow_html=True)
-        with m4:
-            st.markdown(f"""<div class="metric-card purple"><div class="metric-label">Tardy Jobs</div><div class="metric-value">{num_tardy_jobs} / {len(df_spt)}</div><div class="metric-sub">Jumlah job yang terlambat</div></div>""", unsafe_allow_html=True)
-            
-        st.markdown("<br>", unsafe_allow_html=True)
         
         # ─── TABEL HASIL URUTAN SPT ───────────────────────────────────────────
-        st.markdown("**Urutan Pengerjaan Hasil Optimasi SPT**")
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### Penyelesaian :")
+        st.markdown("1. Urutan waktu proses dari yang terkecil sampai yang terbesar")
+        st.markdown("2. Hitung saat selesai (kolom c)")
+        st.markdown("3. Hitung Lateness = saat selesai – due date = c - d")
         
-        df_spt["Sequence"] = [f"Urutan {i+1}" for i in range(len(df_spt))]
-        df_display = df_spt.set_index("Sequence")[["Job_Name", "Processing_Time", "Due_Date", "Start_Time", "Completion_Time", "Lateness", "Tardiness"]]
+        df_display = df_spt.copy()
+        df_display.columns = ["Job", "Waktu proses", "Due date (d)", "Start_Time", "Saat selesai (c)", "Lateness (c-d)"]
+        df_display = df_display[["Job", "Waktu proses", "Due date (d)", "Saat selesai (c)", "Lateness (c-d)"]]
         
-        # Menggunakan Cara 2 (Tanpa Matplotlib) agar aman dari error library
-        st.dataframe(
-            df_display.style
-            .map(lambda x: "background-color: #F3E8FF; color: #6B21A8;" if x > 0 else "", subset=["Processing_Time"])
-            .map(lambda x: "color: #DC2626; font-weight: bold;" if x > 0 else "color: #16A34A;", subset=["Tardiness"]),
-            use_container_width=True
-        )
+        st.dataframe(df_display, use_container_width=True, hide_index=True)
         
         st.markdown("<hr>", unsafe_allow_html=True)
         
-        # ─── VISUALISASI CHART ────────────────────────────────────────────────
-        st.markdown("""<div class="section-header"><div class="section-title">📈 Visualisasi Penjadwalan</div></div>""", unsafe_allow_html=True)
+        # ─── VISUALISASI CHART (Gantt Chart Linear Sesuai Gambar) ──────────────
+        st.markdown("""<div class="section-header"><div class="section-title">📊 Gantt Chart Urutan Pengerjaan</div></div>""", unsafe_allow_html=True)
         
-        c1, c2 = st.columns(2, gap="large")
+        # Palet Warna Pastel untuk Chart Berurutan
+        pastel_colors = ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#BFFCC6', '#AEC6CF', '#C3B1CE', '#FFC6FF', '#E8D6F5']
         
-        with c1:
-            fig_gantt = go.Figure()
-            for idx, row in df_spt.iterrows():
-                fig_gantt.add_trace(go.Bar(
-                    x=[row["Processing_Time"]],
-                    y=["Mesin Tunggal"],
-                    base=[row["Start_Time"]],
-                    orientation='h',
-                    name=row["Job_Name"],
-                    text=f"{row['Job_Name']} ({row['Processing_Time']})",
-                    textposition='inside',
-                    marker=dict(line=dict(color='white', width=1))
-                ))
-            
-            fig_gantt.update_layout(
-                title="Gantt Chart Urutan Pengerjaan (Timeline)",
-                barmode='stack',
-                height=300,
-                plot_bgcolor="white",
-                showlegend=False,
-                xaxis=dict(title="Waktu (Jam/Hari)", gridcolor="#F0E8F5")
+        fig_gantt = go.Figure()
+        
+        # Menggunakan struktur bar tunggal berlapis (stacked) mendatar seperti timeline gambar
+        for idx, row in df_spt.iterrows():
+            color_idx = idx % len(pastel_colors)
+            fig_gantt.add_trace(go.Bar(
+                x=[row["Processing_Time"]],
+                y=["Mesin"],
+                base=[row["Start_Time"]],
+                orientation='h',
+                name=str(row["Job_Name"]),
+                text=f"{row['Job_Name']}",
+                textposition='inside',
+                insidetextanchor='center',
+                marker=dict(
+                    color=pastel_colors[color_idx],
+                    line=dict(color='#4A3E4D', width=1)
+                ),
+                hovertemplate=f"<b>Job:</b> {row['Job_Name']}<br><b>Waktu:</b> {row['Processing_Time']}<br><b>Mulai:</b> {row['Start_Time']}<br><b>Selesai:</b> {row['Completion_Time']}<extra></extra>"
+            ))
+        
+        # Pengaturan sumbu X agar mencantumkan titik-titik milestone waktu pengerjaan
+        tick_vals = [0] + list(df_spt["Completion_Time"].values)
+        
+        fig_gantt.update_layout(
+            barmode='stack',
+            height=200,
+            plot_bgcolor="white",
+            showlegend=False,
+            margin=dict(l=10, r=10, t=20, b=20),
+            xaxis=dict(
+                tickmode='array',
+                tickvals=tick_vals,
+                gridcolor="#E5DEE6",
+                side="bottom"
+            ),
+            yaxis=dict(
+                visible=False
             )
-            st.plotly_chart(fig_gantt, use_container_width=True)
-            
-        with c2:
-            fig_comp = go.Figure()
-            fig_comp.add_bar(x=df_spt["Job_Name"], y=df_spt["Due_Date"], name="Due Date", marker_color="#A070D4")
-            fig_comp.add_bar(x=df_spt["Job_Name"], y=df_spt["Completion_Time"], name="Completion Time", marker_color="#53357B")
-            
-            fig_comp.update_layout(
-                title="Perbandingan Batas Waktu (Due Date) vs Waktu Selesai",
-                barmode="group",
-                height=300,
-                plot_bgcolor="white",
-                xaxis=dict(gridcolor="#F0E8F5"),
-                yaxis=dict(gridcolor="#F0E8F5")
-            )
-            st.plotly_chart(fig_comp, use_container_width=True)
+        )
+        st.plotly_chart(fig_gantt, use_container_width=True)
+        
+        st.markdown("<hr>", unsafe_allow_html=True)
+        
+        # ─── METRIC CARDS (Hasil Penjadwalan SPT di Bagian Akhir) ─────────────
+        st.markdown("""<div class="section-header"><div class="section-title">📋 Hasil Penjadwalan SPT</div></div>""", unsafe_allow_html=True)
+        
+        # Hitung Nilai Performa
+        mean_lateness = df_spt["Lateness"].mean()
+        max_lateness = df_spt["Lateness"].max()
+        
+        # Format string urutan hasil: e.g., 4-8-1-3-7-2-5-6
+        sequence_list = [str(x) for x in df_spt["Job_Name"]]
+        sequence_str = " - ".join(sequence_list)
+        
+        m1, m2, m3 = st.columns(3)
+        with m1:
+            st.markdown(f"""
+            <div class="metric-card pastel-blue">
+                <div class="metric-label">Rata-rata Lateness</div>
+                <div class="metric-value">{mean_lateness:.3f}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with m2:
+            st.markdown(f"""
+            <div class="metric-card pastel-pink">
+                <div class="metric-label">Maximum Lateness</div>
+                <div class="metric-value">{max_lateness}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with m3:
+            st.markdown(f"""
+            <div class="metric-card pastel-green">
+                <div class="metric-label">Urutan Hasil</div>
+                <div class="metric-value" style="font-size: 18px; padding-top: 4px;">{sequence_str}</div>
+            </div>
+            """, unsafe_allow_html=True)
             
     else:
-        st.warning("Silakan masukkan data pekerjaan terlebih dahulu pada tabel.")
+        st.warning("Silakan masukkan data pekerjaan terlebih dahulu pada tabel secara lengkap (Nama Job, Waktu, dan Due Date).")
