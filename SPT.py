@@ -16,8 +16,7 @@ st.set_page_config(
 if "df_input" not in st.session_state:
     st.session_state.df_input = None
 
-# ─── LOGIKAL WAKTU & USER REAL-TIME (Dinamis Setiap Rerender) ────────────────
-# Menggunakan datetime.now().hour secara langsung agar selalu dievaluasi ulang setiap ada perubahan di web
+# ─── LOGIKAL WAKTU REAL-TIME (Evaluasi Setiap Rerender) ──────────────────────
 current_hour = datetime.now().hour
 if 4 <= current_hour < 11:
     sapaan = "Selamat Pagi"
@@ -28,9 +27,19 @@ elif 15 <= current_hour < 18:
 else:
     sapaan = "Selamat Malam"
 
-# Mengambil nama user yang sedang login di Streamlit secara dinamis
-# Jika tidak ada user yang login (misal dijalankan di komputer lokal), default-nya menggunakan "Guest User"
-user_name = st.context.user.name if st.context.user.name else "Guest User"
+# ─── PROTEKSI AMAN DETEKSI USER STREAMLIT ────────────────────────────────────
+# Menggunakan try-except agar jika properti tidak didukung, aplikasi TIDAK ERROR/CRASH
+user_name = "Aura Mutia Azzahra" # Default jika tidak terdeteksi
+
+try:
+    # Coba ambil via properti context modern terlebih dahulu
+    if hasattr(st, "context") and hasattr(st.context, "user") and st.context.user.name:
+        user_name = st.context.user.name
+    # Alternatif cadangan via experimental_user bawaan Streamlit Cloud
+    elif hasattr(st, "experimental_user") and st.experimental_user.get("name"):
+        user_name = st.experimental_user["name"]
+except Exception:
+    pass # Jika ada kendala sistem, abaikan dan pakai default "Aura Mutia Azzahra"
 
 # ─── ADVANCED CUSTOM UI DESAIN (Premium Soft Pastel Pink Theme) ──────────────
 st.markdown("""
