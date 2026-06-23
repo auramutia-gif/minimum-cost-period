@@ -182,7 +182,7 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         
         st.markdown("<hr>", unsafe_allow_html=True)
         
-        # ─── VISUALISASI CHART (Gantt Chart Linear Sesuai Gambar) ──────────────
+       # ─── VISUALISASI CHART (Gantt Chart Linear Sesuai Gambar) ──────────────
         st.markdown("""<div class="section-header"><div class="section-title">📊 Gantt Chart Urutan Pengerjaan</div></div>""", unsafe_allow_html=True)
         
         # Palet Warna Pastel untuk Chart Berurutan
@@ -194,14 +194,13 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         for idx, row in df_spt.iterrows():
             color_idx = idx % len(pastel_colors)
             fig_gantt.add_trace(go.Bar(
-                x=[row["Processing_Time"]],
+                x=[int(row["Processing_Time"])], # Memastikan tipe data integer murni
                 y=["Mesin"],
-                base=[row["Start_Time"]],
+                base=[int(row["Start_Time"])],   # Memastikan tipe data integer murni
                 orientation='h',
                 name=str(row["Job_Name"]),
-                text=f"{row['Job_Name']}",
-                textposition='inside',
-                insidetextanchor='center',
+                text=str(row["Job_Name"]),       # Menampilkan nama job di dalam bar
+                textposition='inside',           # Posisi teks di dalam (aman di semua versi plotly)
                 marker=dict(
                     color=pastel_colors[color_idx],
                     line=dict(color='#4A3E4D', width=1)
@@ -210,7 +209,7 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
             ))
         
         # Pengaturan sumbu X agar mencantumkan titik-titik milestone waktu pengerjaan
-        tick_vals = [0] + list(df_spt["Completion_Time"].values)
+        tick_vals = [0] + [int(x) for x in df_spt["Completion_Time"].values]
         
         fig_gantt.update_layout(
             barmode='stack',
@@ -229,42 +228,3 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
             )
         )
         st.plotly_chart(fig_gantt, use_container_width=True)
-        
-        st.markdown("<hr>", unsafe_allow_html=True)
-        
-        # ─── METRIC CARDS (Hasil Penjadwalan SPT di Bagian Akhir) ─────────────
-        st.markdown("""<div class="section-header"><div class="section-title">📋 Hasil Penjadwalan SPT</div></div>""", unsafe_allow_html=True)
-        
-        # Hitung Nilai Performa
-        mean_lateness = df_spt["Lateness"].mean()
-        max_lateness = df_spt["Lateness"].max()
-        
-        # Format string urutan hasil: e.g., 4-8-1-3-7-2-5-6
-        sequence_list = [str(x) for x in df_spt["Job_Name"]]
-        sequence_str = " - ".join(sequence_list)
-        
-        m1, m2, m3 = st.columns(3)
-        with m1:
-            st.markdown(f"""
-            <div class="metric-card pastel-blue">
-                <div class="metric-label">Rata-rata Lateness</div>
-                <div class="metric-value">{mean_lateness:.3f}</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with m2:
-            st.markdown(f"""
-            <div class="metric-card pastel-pink">
-                <div class="metric-label">Maximum Lateness</div>
-                <div class="metric-value">{max_lateness}</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with m3:
-            st.markdown(f"""
-            <div class="metric-card pastel-green">
-                <div class="metric-label">Urutan Hasil</div>
-                <div class="metric-value" style="font-size: 18px; padding-top: 4px;">{sequence_str}</div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-    else:
-        st.warning("Silakan isi data pekerjaan di tabel atau unggah file CSV terlebih dahulu sebelum menghitung.")
