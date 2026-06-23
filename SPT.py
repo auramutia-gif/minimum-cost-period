@@ -118,8 +118,6 @@ else:
         try:
             df_csv = pd.read_csv(uploaded_file)
             
-            # Map atau bersihkan kolom nama agar seragam dengan engine internal
-            # Mencari kolom berdasarkan kecocokan string tidak sensitif huruf besar-kecil
             col_mapping = {}
             for col in df_csv.columns:
                 c_clean = col.strip().lower()
@@ -149,7 +147,6 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         df_input_final["Due_Date"] = df_input_final["Due_Date"].astype(int)
         
         # ─── SPT Calculation Logic ────────────────────────────────────────────
-        # Urutkan waktu proses dari yang terkecil sampai terbesar
         df_spt = df_input_final.sort_values(by="Processing_Time", ascending=True).reset_index(drop=True)
         
         start_times = []
@@ -182,25 +179,23 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         
         st.markdown("<hr>", unsafe_allow_html=True)
         
-       # ─── VISUALISASI CHART (Gantt Chart Linear Sesuai Gambar) ──────────────
+        # ─── VISUALISASI CHART (Gantt Chart Linear Sesuai Gambar) ──────────────
         st.markdown("""<div class="section-header"><div class="section-title">📊 Gantt Chart Urutan Pengerjaan</div></div>""", unsafe_allow_html=True)
         
-        # Palet Warna Pastel untuk Chart Berurutan
         pastel_colors = ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#BFFCC6', '#AEC6CF', '#C3B1CE', '#FFC6FF', '#E8D6F5']
         
         fig_gantt = go.Figure()
         
-        # Menggunakan struktur bar tunggal berlapis (stacked) mendatar seperti timeline gambar
         for idx, row in df_spt.iterrows():
             color_idx = idx % len(pastel_colors)
             fig_gantt.add_trace(go.Bar(
-                x=[int(row["Processing_Time"])], # Memastikan tipe data integer murni
+                x=[int(row["Processing_Time"])], 
                 y=["Mesin"],
-                base=[int(row["Start_Time"])],   # Memastikan tipe data integer murni
+                base=[int(row["Start_Time"])],   
                 orientation='h',
                 name=str(row["Job_Name"]),
-                text=str(row["Job_Name"]),       # Menampilkan nama job di dalam bar
-                textposition='inside',           # Posisi teks di dalam (aman di semua versi plotly)
+                text=str(row["Job_Name"]),       
+                textposition='inside',           
                 marker=dict(
                     color=pastel_colors[color_idx],
                     line=dict(color='#4A3E4D', width=1)
@@ -208,7 +203,6 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
                 hovertemplate=f"<b>Job:</b> {row['Job_Name']}<br><b>Waktu:</b> {row['Processing_Time']}<br><b>Mulai:</b> {row['Start_Time']}<br><b>Selesai:</b> {row['Completion_Time']}<extra></extra>"
             ))
         
-        # Pengaturan sumbu X agar mencantumkan titik-titik milestone waktu pengerjaan
         tick_vals = [0] + [int(x) for x in df_spt["Completion_Time"].values]
         
         fig_gantt.update_layout(
@@ -229,20 +223,17 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
         )
         st.plotly_chart(fig_gantt, use_container_width=True)
 
-st.markdown("<hr>", unsafe_allow_html=True)
+        st.markdown("<hr>", unsafe_allow_html=True)
         
-        # ─── METRIC CARDS (Hasil Penjadwalan SPT) ─────────────────────────────
+        # ─── METRIC CARDS (Hasil Penjadwalan SPT di Bagian Akhir) ─────────────
         st.markdown("""<div class="section-header"><div class="section-title">📋 Hasil Penjadwalan SPT</div></div>""", unsafe_allow_html=True)
         
-        # Perhitungan Nilai Performa Berdasarkan Aturan SPT
         mean_lateness = df_spt["Lateness"].mean()
         max_lateness = df_spt["Lateness"].max()
         
-        # Format string urutan hasil penjadwalan (Contoh: 4 - 8 - 1 - 3 - 7 - 2 - 5 - 6)
         sequence_list = [str(x) for x in df_spt["Job_Name"]]
         sequence_str = " - ".join(sequence_list)
         
-        # Membuat susunan 3 kolom sesuai permintaan
         kolom_rata_rata, kolom_max_lateness, kolom_urutan_hasil = st.columns(3)
         
         with kolom_rata_rata:
