@@ -11,9 +11,12 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# ─── INISIALISASI SESSION STATE (SOLUSI ERROR) ───
+# Baris ini wajib ada agar st.session_state tidak kosong saat pertama kali di-load
+if "df_input" not in st.session_state:
+    st.session_state.df_input = None
+
 # ─── REAL-TIME CLOCK TRIGGER ───
-# Menggunakan st.rerun() secara otomatis via komponen input waktu tersembunyi
-# untuk memastikan sapaan selalu akurat dengan waktu lokal ter-update.
 current_time_now = datetime.now()
 current_hour = current_time_now.hour
 
@@ -25,6 +28,7 @@ elif 15 <= current_hour < 18:
     sapaan = "Selamat Sore"
 else:
     sapaan = "Selamat Malam"
+
 user_name = "Aura Mutia Azzahra"
 try:
     if hasattr(st, "context") and hasattr(st.context, "user") and st.context.user.name:
@@ -190,7 +194,6 @@ hr { border-color: #FFD6E4 !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# SVG outline untuk halaman utama (selain Sidebar)
 ICONS = {
     "clock": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>""",
     "tool": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>""",
@@ -220,7 +223,6 @@ with st.sidebar:
     <div style='height:1px; background: linear-gradient(90deg, transparent, rgba(255,143,171,0.5), transparent); margin: 0 12px 14px;'></div>
     """, unsafe_allow_html=True)
 
-    # Menggunakan Emoji native agar terbaca sempurna oleh st.radio Streamlit
     menu_pilihan = st.radio(
         "Navigasi Halaman:",
         [
@@ -250,7 +252,6 @@ if st.session_state.df_input is not None and len(st.session_state.df_input) > 0:
     df_spt["Completion_Time"] = comp_times
     df_spt["Lateness"] = df_spt["Completion_Time"] - df_spt["Due_Date"]
 
-    # Pembuatan struktur Gantt Chart global
     pastel_colors = ['#FFB3C6', '#FFDAC1', '#C9F0CB', '#BFFCC6', '#AEC6CF', '#C3B1CE', '#FFC6FF', '#E8D6F5']
     fig_gantt = go.Figure()
     for idx, row in df_spt.iterrows():
