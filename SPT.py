@@ -194,11 +194,11 @@ hr { border-color: #FFD6E4 !important; }
 
 # SVG icon strings (outline style, mirip Flaticon)
 ICONS = {
-    "home": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>""",
-    "edit": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>""",
-    "table": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>""",
-    "chart": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 16V10M12 16V8M17 16v-4"/></svg>""",
-    "download": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>""",
+    "home": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; vertical-align:middle; margin-right:8px;"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>""",
+    "edit": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; vertical-align:middle; margin-right:8px;"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>""",
+    "table": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; vertical-align:middle; margin-right:8px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>""",
+    "chart": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; vertical-align:middle; margin-right:8px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 16V10M12 16V8M17 16v-4"/></svg>""",
+    "download": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px; height:16px; vertical-align:middle; margin-right:8px;"><path d="M12 3v13M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>""",
     "clock": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>""",
     "tool": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>""",
     "star": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>""",
@@ -206,7 +206,9 @@ ICONS = {
 
 def icon(name, color="#5C1A30", size=16):
     svg = ICONS.get(name, "")
-    return f'<span style="display:inline-flex;align-items:center;width:{size}px;height:{size}px;color:{color};flex-shrink:0">{svg}</span>'
+    # Menghapus style inline bawaan penampung global khusus untuk penggunaan non-sidebar
+    svg_clean = svg.replace('style="width:16px; height:16px; vertical-align:middle; margin-right:8px;"', '')
+    return f'<span style="display:inline-flex;align-items:center;width:{size}px;height:{size}px;color:{color};flex-shrink:0">{svg_clean}</span>'
 
 # ─── SIDEBAR ─────────────────────────────────────────────────────────────────
 with st.sidebar:
@@ -223,37 +225,29 @@ with st.sidebar:
     <div style='height:1px; background: linear-gradient(90deg, transparent, rgba(255,143,171,0.5), transparent); margin: 0 12px 14px;'></div>
     """, unsafe_allow_html=True)
 
+    # Memasukkan kode HTML SVG langsung ke dalam opsi pilihan radio agar emoticon tidak tersembunyi/hilang oleh CSS
     menu_pilihan = st.radio(
         "Navigasi Halaman:",
         [
-            "  Dashboard",
-            "  Input Data Job",
-            "  Hasil Penjadwalan SPT",
-            "  Hasil Gantt Chart",
-            "  Download Hasil"
+            "Dashboard",
+            "Input Data Job",
+            "Hasil Penjadwalan SPT",
+            "Hasil Gantt Chart",
+            "Download Hasil"
         ],
         index=0,
-        format_func=lambda x: x.strip()
+        format_func=lambda x: f"{ICONS['home']} Dashboard" if x == "Dashboard" else (
+            f"{ICONS['edit']} Input Data Job" if x == "Input Data Job" else (
+                f"{ICONS['table']} Hasil Penjadwalan SPT" if x == "Hasil Penjadwalan SPT" else (
+                    f"{ICONS['chart']} Hasil Gantt Chart" if x == "Hasil Gantt Chart" else f"{ICONS['download']} Download Hasil"
+                )
+            )
+        )
     )
-
-    # Inject SVG icons via JS trick — pakai HTML di bawah radio untuk overlay label
-    icon_map = {
-        "  Dashboard": ICONS["home"],
-        "  Input Data Job": ICONS["edit"],
-        "  Hasil Penjadwalan SPT": ICONS["table"],
-        "  Hasil Gantt Chart": ICONS["chart"],
-        "  Download Hasil": ICONS["download"],
-    }
-
-    icon_html = """
-    <style>
-    /* Inject icons before each label text via absolute-positioned sibling */
-    </style>
-    """
-    st.markdown(icon_html, unsafe_allow_html=True)
 
 # ─── ENGINE KALKULASI ─────────────────────────────────────────────────────────
 df_spt = None
+fig_gantt = None # Wadah global untuk konversi download gambar chart
 if st.session_state.df_input is not None and len(st.session_state.df_input) > 0:
     df_calc = st.session_state.df_input.copy()
     df_calc["Processing_Time"] = df_calc["Processing_Time"].astype(int)
@@ -268,8 +262,28 @@ if st.session_state.df_input is not None and len(st.session_state.df_input) > 0:
     df_spt["Completion_Time"] = comp_times
     df_spt["Lateness"] = df_spt["Completion_Time"] - df_spt["Due_Date"]
 
+    # Inisialisasi struktur grafik agar bisa dibaca di halaman download hasil
+    pastel_colors = ['#FFB3C6', '#FFDAC1', '#C9F0CB', '#BFFCC6', '#AEC6CF', '#C3B1CE', '#FFC6FF', '#E8D6F5']
+    fig_gantt = go.Figure()
+    for idx, row in df_spt.iterrows():
+        color_idx = idx % len(pastel_colors)
+        fig_gantt.add_trace(go.Bar(
+            x=[int(row["Processing_Time"])], y=["Mesin"], base=[int(row["Start_Time"])],
+            orientation='h', name=str(row["Job_Name"]), text=str(row["Job_Name"]),
+            textposition='inside',
+            marker=dict(color=pastel_colors[color_idx], line=dict(color='#5C1A30', width=1)),
+            hovertemplate=f"<b>Job:</b> {row['Job_Name']}<br><b>Waktu:</b> {row['Processing_Time']}<br><b>Mulai:</b> {row['Start_Time']}<br><b>Selesai:</b> {row['Completion_Time']}<extra></extra>"
+        ))
+    tick_vals = [0] + list(map(int, df_spt["Completion_Time"].values))
+    fig_gantt.update_layout(
+        barmode='stack', height=200, plot_bgcolor="white", showlegend=False,
+        margin=dict(l=10, r=10, t=20, b=20),
+        xaxis=dict(tickmode='array', tickvals=tick_vals, gridcolor="#FFE5EC", side="bottom"),
+        yaxis=dict(visible=False)
+    )
+
 # ─── HALAMAN 1: DASHBOARD ─────────────────────────────────────────────────────
-if menu_pilihan == "  Dashboard":
+if menu_pilihan == "Dashboard":
     st.markdown(f"""
     <div class="hero-banner">
         <div class="hero-title">{icon("star", "#5C1A30", 22)} &nbsp;{sapaan}, {user_name}!</div>
@@ -279,7 +293,7 @@ if menu_pilihan == "  Dashboard":
 
     st.markdown(f"""
     <div class="dashboard-box">
-        <div class="box-title">{icon("clock", "#FF8FAB", 17)} &nbsp;Apa itu Aturan Shortest Processing Time (SPT)?</div>
+        <div class="box-title"> {icon("clock", "#FF8FAB", 17)} &nbsp;Apa itu Aturan Shortest Processing Time (SPT)?</div>
         <div class="box-text">
             <b>Shortest Processing Time (SPT)</b> adalah salah satu metode penjadwalan prioritas di mana pekerjaan yang memiliki
             <b>waktu proses paling pendek</b> akan dikerjakan terlebih dahulu. Secara analitis, aturan ini sangat efektif untuk
@@ -303,7 +317,7 @@ if menu_pilihan == "  Dashboard":
     """, unsafe_allow_html=True)
 
 # ─── HALAMAN 2: INPUT DATA JOB ────────────────────────────────────────────────
-elif menu_pilihan == "  Input Data Job":
+elif menu_pilihan == "Input Data Job":
     st.markdown(f"""<div class="section-header">{icon("edit","#FF8FAB",20)}<div class="section-title">Input Data Job (Pekerjaan)</div></div>""", unsafe_allow_html=True)
 
     input_method = st.radio(
@@ -360,7 +374,7 @@ elif menu_pilihan == "  Input Data Job":
                 st.error(f"❌ Terjadi kesalahan saat membaca file: {e}")
 
 # ─── HALAMAN 3: HASIL PENJADWALAN SPT ─────────────────────────────────────────
-elif menu_pilihan == "  Hasil Penjadwalan SPT":
+elif menu_pilihan == "Hasil Penjadwalan SPT":
     st.markdown(f"""<div class="section-header">{icon("table","#FF8FAB",20)}<div class="section-title">Tabel Urutan Penyelesaian SPT</div></div>""", unsafe_allow_html=True)
     if df_spt is not None:
         df_display = df_spt.copy()
@@ -382,53 +396,53 @@ elif menu_pilihan == "  Hasil Penjadwalan SPT":
         st.warning("⚠️ Belum ada data pekerjaan. Silakan isi data di menu 'Input Data Job'.")
 
 # ─── HALAMAN 4: GANTT CHART ────────────────────────────────────────────────────
-elif menu_pilihan == "  Hasil Gantt Chart":
+elif menu_pilihan == "Hasil Gantt Chart":
     st.markdown(f"""<div class="section-header">{icon("chart","#FF8FAB",20)}<div class="section-title">Gantt Chart Urutan Pengerjaan Mesin</div></div>""", unsafe_allow_html=True)
-    if df_spt is not None:
-        pastel_colors = ['#FFB3C6', '#FFDAC1', '#C9F0CB', '#BFFCC6', '#AEC6CF', '#C3B1CE', '#FFC6FF', '#E8D6F5']
-        fig_gantt = go.Figure()
-        for idx, row in df_spt.iterrows():
-            color_idx = idx % len(pastel_colors)
-            fig_gantt.add_trace(go.Bar(
-                x=[int(row["Processing_Time"])], y=["Mesin"], base=[int(row["Start_Time"])],
-                orientation='h', name=str(row["Job_Name"]), text=str(row["Job_Name"]),
-                textposition='inside',
-                marker=dict(color=pastel_colors[color_idx], line=dict(color='#5C1A30', width=1)),
-                hovertemplate=f"<b>Job:</b> {row['Job_Name']}<br><b>Waktu:</b> {row['Processing_Time']}<br><b>Mulai:</b> {row['Start_Time']}<br><b>Selesai:</b> {row['Completion_Time']}<extra></extra>"
-            ))
-        tick_vals = [0] + list(map(int, df_spt["Completion_Time"].values))
-        fig_gantt.update_layout(
-            barmode='stack', height=200, plot_bgcolor="white", showlegend=False,
-            margin=dict(l=10, r=10, t=20, b=20),
-            xaxis=dict(tickmode='array', tickvals=tick_vals, gridcolor="#FFE5EC", side="bottom"),
-            yaxis=dict(visible=False)
-        )
+    if df_spt is not None and fig_gantt is not None:
         st.plotly_chart(fig_gantt, use_container_width=True)
     else:
         st.warning("⚠️ Gantt chart belum dapat dibuat. Silakan isi data di menu 'Input Data Job'.")
 
 # ─── HALAMAN 5: DOWNLOAD ──────────────────────────────────────────────────────
-elif menu_pilihan == "  Download Hasil":
+elif menu_pilihan == "Download Hasil":
     st.markdown(f"""<div class="section-header">{icon("download","#FF8FAB",20)}<div class="section-title">Unduh Hasil Eksperimen</div></div>""", unsafe_allow_html=True)
-    if df_spt is not None:
+    if df_spt is not None and fig_gantt is not None:
         st.markdown(f"""
         <div class="dashboard-box">
-            <div class="box-title">{icon("download","#FF8FAB",17)} &nbsp;Ekspor Berkas CSV Hasil Perhitungan Terjadwal</div>
+            <div class="box-title">{icon("download","#FF8FAB",17)} &nbsp;Ekspor Berkas Perhitungan Terjadwal & Visualisasi Grafik</div>
             <div class="box-text">
-                Rangkaian matriks data urutan pengerjaan optimal Shortest Processing Time (SPT) mencakup kalkulasi
-                saat mulai (<i>start time</i>), saat pengerjaan selesai (<i>completion time</i>), dan selisih keterlambatan batas waktu (<i>lateness</i>)
-                dapat diunduh secara penuh di bawah ini.
+                Anda dapat mengunduh rangkaian matriks data pengerjaan optimal Shortest Processing Time (SPT) ke dalam berkas CSV, 
+                sekaligus mengekstrak berkas visualisasi lini masa gambar grafik batang horizontal (Gantt Chart) di bawah ini.
             </div>
         </div>
         """, unsafe_allow_html=True)
-        csv_buffer = io.StringIO()
-        df_spt.to_csv(csv_buffer, index=False)
-        st.download_button(
-            label="  Download Hasil Analisis Penjadwalan (.CSV)",
-            data=csv_buffer.getvalue(),
-            file_name=f"Hasil_Optimasi_SPT_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
-            mime="text/csv",
-            use_container_width=True
-        )
+        
+        kolom_dl_csv, kolom_dl_img = st.columns(2)
+        
+        with kolom_dl_csv:
+            csv_buffer = io.StringIO()
+            df_spt.to_csv(csv_buffer, index=False)
+            st.download_button(
+                label="📊 Download Tabel Analisis Penjadwalan (.CSV)",
+                data=csv_buffer.getvalue(),
+                file_name=f"Tabel_Hasil_SPT_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+            
+        with kolom_dl_img:
+            # Mengonversi plot plotly grafik batang horizontal menjadi format biner PNG byte array
+            try:
+                img_bytes = fig_gantt.to_image(format="png", width=1200, height=350, scale=2)
+                st.download_button(
+                    label="🖼️ Download Gambar Gantt Chart (.PNG)",
+                    data=img_bytes,
+                    file_name=f"Gantt_Chart_SPT_{datetime.now().strftime('%Y%m%d_%H%M')}.png",
+                    mime="image/png",
+                    use_container_width=True
+                )
+            except Exception:
+                # Fallback aman jika package kaleido belum/tidak terpasang sempurna di container server
+                st.info("💡 Catatan: Unduhan langsung gambar PNG membutuhkan library `kaleido`. Jika tombol gambar bermasalah, Anda juga bisa menyimpan grafik dengan klik kanan ikon kamera kecil pada pojok kanan atas grafik di menu halaman 'Hasil Gantt Chart'.")
     else:
         st.warning("⚠️ Tidak ada data kalkulasi yang tersedia. Selesaikan pengisian di menu 'Input Data Job' terlebih dahulu.")
