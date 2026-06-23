@@ -73,39 +73,84 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div class="info-box">
-    💡 <b>Petunjuk:</b> Isikan daftar pekerjaan pada baris kosong di bawah ini. Masukkan Nama Job, Waktu Proses (Waktu), dan Due Date. 
-    Gunakan tombol <b>"Enter"</b> atau klik sel di bawahnya untuk menambah baris baru.
-</div>
-""", unsafe_allow_html=True)
-
-# Dataframe baseline dikosongkan sesuai permintaan
-init_data = pd.DataFrame(columns=["Job_Name", "Processing_Time", "Due_Date"])
-
-edited_df = st.data_editor(
-    init_data,
-    num_rows="dynamic",
-    use_container_width=True,
-    column_config={
-        "Job_Name": st.column_config.TextColumn("Job", required=True),
-        "Processing_Time": st.column_config.NumberColumn("Waktu (Waktu Proses)", min_value=1, step=1, format="%d"),
-        "Due_Date": st.column_config.NumberColumn("Due Date", min_value=1, step=1, format="%d")
-    }
+# Pilihan Metode Input Data
+input_method = st.radio(
+    "Pilih Metode Input Data:",
+    ("Manual Input (Ketik di Tabel)", "Otomatis (Upload File CSV)"),
+    horizontal=True
 )
 
+df_input_final = None
+
+if input_method == "Manual Input (Ketik di Tabel)":
+    st.markdown("""
+    <div class="info-box">
+        💡 <b>Petunjuk:</b> Isikan daftar pekerjaan pada baris kosong di bawah ini. Masukkan Nama Job, Waktu Proses (Waktu), dan Due Date. 
+        Gunakan tombol <b>"Enter"</b> atau klik sel di bawahnya untuk menambah baris baru.
+    </div>
+    """, unsafe_allow_html=True)
+
+    init_data = pd.DataFrame(columns=["Job_Name", "Processing_Time", "Due_Date"])
+    edited_df = st.data_editor(
+        init_data,
+        num_rows="dynamic",
+        use_container_width=True,
+        column_config={
+            "Job_Name": st.column_config.TextColumn("Job", required=True),
+            "Processing_Time": st.column_config.NumberColumn("Waktu (Waktu Proses)", min_value=1, step=1, format="%d"),
+            "Due_Date": st.column_config.NumberColumn("Due Date", min_value=1, step=1, format="%d")
+        }
+    )
+    if edited_df is not None and len(edited_df) > 0:
+        df_input_final = edited_df.dropna(subset=["Job_Name", "Processing_Time", "Due_Date"]).copy()
+
+else:
+    st.markdown("""
+    <div class="info-box">
+        📂 <b>Format Kolom CSV:</b> Pastikan file CSV Anda memiliki header atau nama kolom yang tepat yaitu: 
+        <code style="background-color: #E2D4E7; padding: 2px 6px; border-radius: 4px; color: #4A3E4D; font-weight: bold;">Job | Waktu Proses | Due date</code>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
+    
+    if uploaded_file is not None:
+        try:
+            df_csv = pd.read_csv(uploaded_file)
+            
+            # Map atau bersihkan kolom nama agar seragam dengan engine internal
+            # Mencari kolom berdasarkan kecocokan string tidak sensitif huruf besar-kecil
+            col_mapping = {}
+            for col in df_csv.columns:
+                c_clean = col.strip().lower()
+                if c_clean == 'job':
+                    col_mapping[col] = 'Job_Name'
+                elif 'waktu' in c_clean or 'processing' in c_clean:
+                    col_mapping[col] = 'Processing_Time'
+                elif 'due' in c_clean:
+                    col_mapping[col] = 'Due_Date'
+            
+            if len(col_mapping) >= 3:
+                df_csv = df_csv.rename(columns=col_mapping)
+                df_input_final = df_csv[['Job_Name', 'Processing_Time', 'Due_Date']].dropna().copy()
+                st.success("✅ File CSV berhasil diunggah!")
+                st.dataframe(df_input_final, use_container_width=True)
+            else:
+                st.error("❌ Gagal memetakan kolom. Pastikan file CSV memiliki kolom: 'Job', 'Waktu Proses', dan 'Due date'.")
+        except Exception as e:
+            st.error(f"❌ Terjadi kesalahan saat membaca file: {e}")
+
+# ─── Prosedur Perhitungan dan output ──────────────────────────────────────────
 if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
-    # Validasi agar tidak error saat data kosong
-    if edited_df is not None and len(edited_df) > 0 and not edited_df.dropna(subset=["Job_Name", "Processing_Time", "Due_Date"]).empty:
-        df_jobs = edited_df.dropna(subset=["Job_Name", "Processing_Time", "Due_Date"]).copy()
+    if df_input_final is not None and len(df_input_final) > 0:
         
         # Pastikan tipe data numerik
-        df_jobs["Processing_Time"] = df_jobs["Processing_Time"].astype(int)
-        df_jobs["Due_Date"] = df_jobs["Due_Date"].astype(int)
+        df_input_final["Processing_Time"] = df_input_final["Processing_Time"].astype(int)
+        df_input_final["Due_Date"] = df_input_final["Due_Date"].astype(int)
         
         # ─── SPT Calculation Logic ────────────────────────────────────────────
         # Urutkan waktu proses dari yang terkecil sampai terbesar
-        df_spt = df_jobs.sort_values(by="Processing_Time", ascending=True).reset_index(drop=True)
+        df_spt = df_input_final.sort_values(by="Processing_Time", ascending=True).reset_index(drop=True)
         
         start_times = []
         comp_times = []
@@ -222,4 +267,4 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
             """, unsafe_allow_html=True)
             
     else:
-        st.warning("Silakan masukkan data pekerjaan terlebih dahulu pada tabel secara lengkap (Nama Job, Waktu, dan Due Date).")
+        st.warning("Silakan isi data pekerjaan di tabel atau unggah file CSV terlebih dahulu sebelum menghitung.")
