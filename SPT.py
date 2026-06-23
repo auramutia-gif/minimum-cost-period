@@ -228,3 +228,46 @@ if st.button("▶ Hitung Penjadwalan SPT", type="primary"):
             )
         )
         st.plotly_chart(fig_gantt, use_container_width=True)
+
+st.markdown("<hr>", unsafe_allow_html=True)
+        
+        # ─── METRIC CARDS (Hasil Penjadwalan SPT) ─────────────────────────────
+        st.markdown("""<div class="section-header"><div class="section-title">📋 Hasil Penjadwalan SPT</div></div>""", unsafe_allow_html=True)
+        
+        # Perhitungan Nilai Performa Berdasarkan Aturan SPT
+        mean_lateness = df_spt["Lateness"].mean()
+        max_lateness = df_spt["Lateness"].max()
+        
+        # Format string urutan hasil penjadwalan (Contoh: 4 - 8 - 1 - 3 - 7 - 2 - 5 - 6)
+        sequence_list = [str(x) for x in df_spt["Job_Name"]]
+        sequence_str = " - ".join(sequence_list)
+        
+        # Membuat susunan 3 kolom sesuai permintaan
+        kolom_rata_rata, kolom_max_lateness, kolom_urutan_hasil = st.columns(3)
+        
+        with kolom_rata_rata:
+            st.markdown(f"""
+            <div class="metric-card pastel-blue">
+                <div class="metric-label">Rata-rata Lateness</div>
+                <div class="metric-value">{mean_lateness:.3f}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+        with kolom_max_lateness:
+            st.markdown(f"""
+            <div class="metric-card pastel-pink">
+                <div class="metric-label">Maximum Lateness</div>
+                <div class="metric-value">{max_lateness}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+        with kolom_urutan_hasil:
+            st.markdown(f"""
+            <div class="metric-card pastel-green">
+                <div class="metric-label">Urutan Hasil Penjadwalan</div>
+                <div class="metric-value" style="font-size: 18px; padding-top: 4px;">{sequence_str}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+    else:
+        st.warning("Silakan isi data pekerjaan di tabel atau unggah file CSV terlebih dahulu sebelum menghitung.")
