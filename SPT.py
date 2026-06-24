@@ -6,7 +6,7 @@ import io
 import pytz
 
 st.set_page_config(
-    page_title="Production Scheduling · SPT Optimizer",
+    page_title="Penjadwalan Produksi · Pengoptimal SPT",
     page_icon="⏱️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -37,7 +37,7 @@ except Exception:
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&family=DM+Mono:wght=400;500&display=swap');
 
 html, body, [class*="css"] {
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -55,7 +55,6 @@ html, body, [class*="css"] {
     overflow: hidden !important;
 }
 
-/* Membuat lapisan gelembung transparan bergerak di atas background pink */
 [data-testid="stSidebar"]::before {
     content: '';
     position: absolute;
@@ -77,7 +76,6 @@ html, body, [class*="css"] {
     100% { background-position: 0px -300px; }
 }
 
-/* Memastikan konten sidebar berada di atas animasi gelembung */
 [data-testid="stSidebar"] > div {
     position: relative;
     z-index: 1;
@@ -219,12 +217,10 @@ html, body, [class*="css"] {
 .info-box { background: #FFF3F6; border-left: 4px solid #FFB3C6; border-radius: 0 10px 10px 0; padding: 13px 16px; margin-bottom: 20px; font-size: 13px; color: #6D404E; }
 hr { border-color: #FFD6E4 !important; }
 
-/* ─── FLATICON SVG ICONS ─── */
 .nav-icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px; }
 </style>
 """, unsafe_allow_html=True)
 
-# SVG icon strings (outline style, mirip Flaticon)
 ICONS = {
     "home": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>""",
     "edit": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>""",
@@ -246,10 +242,10 @@ with st.sidebar:
     <div style='padding: 22px 16px 16px 16px;'>
         <div style='display:flex; align-items:center; gap:10px; margin-bottom:4px;'>
             <span style='display:inline-flex;align-items:center;width:28px;height:28px;color:#5C1A30;background:rgba(255,255,255,0.6);border-radius:8px;padding:5px;box-sizing:border-box;'>{ICONS["clock"]}</span>
-            <span style='font-size: 18px; font-weight: 700; color: #5C1A30;'>SPT Dashboard</span>
+            <span style='font-size: 18px; font-weight: 700; color: #5C1A30;'>Dashboard SPT</span>
         </div>
         <div style='font-size: 11px; color: #9A5060; margin-top: 2px; margin-left: 38px; letter-spacing: 0.3px;'>
-            Shortest Processing Time Optimizer
+            Pengoptimal Shortest Processing Time
         </div>
     </div>
     <div style='height:1px; background: linear-gradient(90deg, transparent, rgba(255,143,171,0.5), transparent); margin: 0 12px 14px;'></div>
@@ -262,7 +258,7 @@ with st.sidebar:
             "📝  Input Data Job",
             "📋  Hasil Penjadwalan SPT",
             "📊  Hasil Gantt Chart",
-            "📥  Download Hasil"
+            "📥  Unduh Hasil"
         ],
         index=0
     )
@@ -271,17 +267,17 @@ with st.sidebar:
 df_spt = None
 if st.session_state.df_input is not None and len(st.session_state.df_input) > 0:
     df_calc = st.session_state.df_input.copy()
-    df_calc["Processing_Time"] = df_calc["Processing_Time"].astype(int)
+    df_calc["Waktu_Proses"] = df_calc["Waktu_Proses"].astype(int)
     df_calc["Due_Date"] = df_calc["Due_Date"].astype(int)
-    df_spt = df_calc.sort_values(by="Processing_Time", ascending=True).reset_index(drop=True)
+    df_spt = df_calc.sort_values(by="Waktu_Proses", ascending=True).reset_index(drop=True)
     start_times, comp_times, current_time = [], [], 0
     for idx, row in df_spt.iterrows():
         start_times.append(current_time)
-        current_time += row["Processing_Time"]
+        current_time += row["Waktu_Proses"]
         comp_times.append(current_time)
-    df_spt["Start_Time"] = start_times
-    df_spt["Completion_Time"] = comp_times
-    df_spt["Lateness"] = df_spt["Completion_Time"] - df_spt["Due_Date"]
+    df_spt["Saat_Mulai"] = start_times
+    df_spt["Saat_Selesai"] = comp_times
+    df_spt["Lateness"] = df_spt["Saat_Selesai"] - df_spt["Due_Date"]
 
 # ─── HALAMAN 1: DASHBOARD ─────────────────────────────────────────────────────
 if menu_pilihan == "🏠  Dashboard":
@@ -299,7 +295,7 @@ if menu_pilihan == "🏠  Dashboard":
             <b>Shortest Processing Time (SPT)</b> adalah salah satu metode penjadwalan prioritas di mana pekerjaan yang memiliki
             <b>waktu proses paling pendek</b> akan dikerjakan terlebih dahulu. Secara analitis, aturan ini sangat efektif untuk
             meminimalkan waktu tunggu, mengurangi penumpukan antrean (Work-In-Process), serta menekan nilai
-            <i>Mean Lateness</i> hingga titik paling rendah.
+            <i>Rata-rata Keterlambatan (Mean Lateness)</i> hingga titik paling rendah.
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -308,11 +304,11 @@ if menu_pilihan == "🏠  Dashboard":
     <div class="dashboard-box">
         <div class="box-title">{icon("tool", "#FF8FAB", 17)} &nbsp;Langkah Penggunaan Aplikasi Web</div>
         <div class="box-text">
-            1. Buka menu samping, lalu pilih <b>"Input Data Job"</b>. Di sana Anda bisa memasukkan data secara Manual via Tabel atau Upload CSV.<br><br>
+            1. Buka menu samping, lalu pilih <b>"Input Data Job"</b>. Di sana Anda bisa memasukkan data secara Manual via Tabel atau Unggah CSV.<br><br>
             2. Sistem secara otomatis akan memproses urutan penjadwalan di latar belakang tanpa perlu menekan tombol hitung.<br><br>
             3. Klik menu <b>"Hasil Penjadwalan SPT"</b> untuk melihat hasil analisis tabel perhitungan performa keterlambatan.<br><br>
-            4. Klik menu <b>"Hasil Gantt Chart"</b> untuk melihat urutan lini masa pengerjaan mesin secara horizontal.<br><br>
-            5. Gunakan menu <b>"Download Hasil"</b> untuk mengunduh seluruh ringkasan tabel data penjadwalan ke berkas CSV.
+            4. Klik menu <b>"Hasil Gantt Chart"</b> untuk melihat urutan lini masa pengerjaan mesin secara horizontal dengan penanda batas garis ukuran.<br><br>
+            5. Gunakan menu <b>"Unduh Hasil"</b> untuk mengunduh seluruh ringkasan tabel data penjadwalan ke berkas CSV.
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -323,11 +319,11 @@ elif menu_pilihan == "📝  Input Data Job":
 
     input_method = st.radio(
         "Pilih Metode Memasukkan Data:",
-        ("Manual Input (Ketik di Tabel)", "Otomatis (Upload File CSV)"),
+        ("Masukan Manual (Ketik di Tabel)", "Otomatis (Unggah File CSV)"),
         horizontal=True
     )
 
-    if input_method == "Manual Input (Ketik di Tabel)":
+    if input_method == "Masukan Manual (Ketik di Tabel)":
         st.markdown("""
         <div class="info-box">
             💡 <b>Petunjuk:</b> Isikan daftar pekerjaan langsung pada komponen tabel di bawah ini.
@@ -335,23 +331,23 @@ elif menu_pilihan == "📝  Input Data Job":
         </div>
         """, unsafe_allow_html=True)
 
-        init_data = st.session_state.df_input if st.session_state.df_input is not None else pd.DataFrame(columns=["Job_Name", "Processing_Time", "Due_Date"])
+        init_data = st.session_state.df_input if st.session_state.df_input is not None else pd.DataFrame(columns=["Job", "Waktu_Proses", "Due_Date"])
         edited_df = st.data_editor(
             init_data, num_rows="dynamic", use_container_width=True,
             column_config={
-                "Job_Name": st.column_config.TextColumn("Job", required=True),
-                "Processing_Time": st.column_config.NumberColumn("Waktu Proses", min_value=1, step=1, format="%d"),
-                "Due_Date": st.column_config.NumberColumn("Due Date", min_value=1, step=1, format="%d")
+                "Job": st.column_config.TextColumn("Job", required=True),
+                "Waktu_Proses": st.column_config.NumberColumn("Waktu proses", min_value=1, step=1, format="%d"),
+                "Due_Date": st.column_config.NumberColumn("Due date", min_value=1, step=1, format="%d")
             }
         )
         if edited_df is not None and len(edited_df) > 0:
-            st.session_state.df_input = edited_df.dropna(subset=["Job_Name", "Processing_Time", "Due_Date"]).copy()
+            st.session_state.df_input = edited_df.dropna(subset=["Job", "Waktu_Proses", "Due_Date"]).copy()
             st.toast("Data tabel manual diperbarui!", icon="✏️")
     else:
         st.markdown("""
         <div class="info-box">
             📂 <b>Format Kolom CSV:</b> Pastikan file CSV Anda memiliki nama kolom header yang sesuai:
-            <code style="background-color: #FFE5EC; padding: 2px 6px; border-radius: 4px; color: #5C1A30; font-weight: bold;">Job | Waktu Proses | Due date</code>
+            <code style="background-color: #FFE5EC; padding: 2px 6px; border-radius: 4px; color: #5C1A30; font-weight: bold;">Job | Waktu proses | Due date</code>
         </div>
         """, unsafe_allow_html=True)
         uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
@@ -361,16 +357,16 @@ elif menu_pilihan == "📝  Input Data Job":
                 col_mapping = {}
                 for col in df_csv.columns:
                     c_clean = col.strip().lower()
-                    if c_clean == 'job': col_mapping[col] = 'Job_Name'
-                    elif 'waktu' in c_clean or 'processing' in c_clean: col_mapping[col] = 'Processing_Time'
+                    if c_clean == 'job': col_mapping[col] = 'Job'
+                    elif 'waktu' in c_clean or 'processing' in c_clean: col_mapping[col] = 'Waktu_Proses'
                     elif 'due' in c_clean: col_mapping[col] = 'Due_Date'
                 if len(col_mapping) >= 3:
                     df_csv = df_csv.rename(columns=col_mapping)
-                    st.session_state.df_input = df_csv[['Job_Name', 'Processing_Time', 'Due_Date']].dropna().copy()
+                    st.session_state.df_input = df_csv[['Job', 'Waktu_Proses', 'Due_Date']].dropna().copy()
                     st.success("✅ File CSV berhasil diunggah!")
                     st.dataframe(st.session_state.df_input, use_container_width=True)
                 else:
-                    st.error("❌ Gagal memetakan kolom. Pastikan file CSV memiliki kolom: 'Job', 'Waktu Proses', dan 'Due date'.")
+                    st.error("❌ Gagal memetakan kolom. Pastikan file CSV memiliki kolom: 'Job', 'Waktu proses', dan 'Due date'.")
             except Exception as e:
                 st.error(f"❌ Terjadi kesalahan saat membaca file: {e}")
 
@@ -379,51 +375,102 @@ elif menu_pilihan == "📋  Hasil Penjadwalan SPT":
     st.markdown(f"""<div class="section-header">{icon("table","#FF8FAB",20)}<div class="section-title">Tabel Urutan Penyelesaian SPT</div></div>""", unsafe_allow_html=True)
     if df_spt is not None:
         df_display = df_spt.copy()
-        df_display.columns = ["Job", "Waktu proses", "Due date (d)", "Start_Time", "Saat selesai (c)", "Lateness (c-d)"]
-        df_display = df_display[["Job", "Waktu proses", "Due date (d)", "Saat selesai (c)", "Lateness (c-d)"]]
+        df_display.columns = ["Job", "Waktu proses", "Due date", "Saat mulai", "Saat selesai", "Lateness"]
+        df_display = df_display[["Job", "Waktu proses", "Due date", "Saat selesai", "Lateness"]]
         st.dataframe(df_display, use_container_width=True, hide_index=True)
         st.markdown("<hr>", unsafe_allow_html=True)
         mean_lateness = df_spt["Lateness"].mean()
         max_lateness = df_spt["Lateness"].max()
-        sequence_str = " → ".join([str(x) for x in df_spt["Job_Name"]])
+        sequence_str = " → ".join([str(x) for x in df_spt["Job"]])
         c1, c2, c3 = st.columns(3)
         with c1:
-            st.markdown(f'<div class="metric-card pastel-blue"><div class="metric-label">Rata-rata Lateness</div><div class="metric-value">{mean_lateness:.3f}</div></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="metric-card pastel-blue"><div class="metric-label">Rata-rata Keterlambatan</div><div class="metric-value">{mean_lateness:.3f}</div></div>', unsafe_allow_html=True)
         with c2:
-            st.markdown(f'<div class="metric-card pastel-pink"><div class="metric-label">Maximum Lateness</div><div class="metric-value">{max_lateness}</div></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="metric-card pastel-pink"><div class="metric-label">Keterlambatan Maksimum</div><div class="metric-value">{max_lateness}</div></div>', unsafe_allow_html=True)
         with c3:
             st.markdown(f'<div class="metric-card pastel-green"><div class="metric-label">Urutan Penjadwalan</div><div class="metric-value" style="font-size:14px;padding-top:4px;">{sequence_str}</div></div>', unsafe_allow_html=True)
     else:
         st.warning("⚠️ Belum ada data pekerjaan. Silakan isi data di menu 'Input Data Job'.")
 
-# ─── HALAMAN 4: GANTT CHART ────────────────────────────────────────────────────
+# ─── HALAMAN 4: GANTT CHART (REPLIKA IMAGE_6BD022.PNG) ────────────────────────
 elif menu_pilihan == "📊  Hasil Gantt Chart":
     st.markdown(f"""<div class="section-header">{icon("chart","#FF8FAB",20)}<div class="section-title">Gantt Chart Urutan Pengerjaan Mesin</div></div>""", unsafe_allow_html=True)
     if df_spt is not None:
-        pastel_colors = ['#FFB3C6', '#FFDAC1', '#C9F0CB', '#BFFCC6', '#AEC6CF', '#C3B1CE', '#FFC6FF', '#E8D6F5']
+        pastel_colors = ['#5D8AA8', '#E6D7D2', '#ECECF4', '#E3EDF7', '#D4A5A5', '#D1E2C4', '#776B9A', '#C3D1AA']
+        
         fig_gantt = go.Figure()
+        
+        # Tambahkan diagram bar horizontal bertumpuk (Stacked Horizontal Bar)
         for idx, row in df_spt.iterrows():
             color_idx = idx % len(pastel_colors)
             fig_gantt.add_trace(go.Bar(
-                x=[int(row["Processing_Time"])], y=["Mesin"], base=[int(row["Start_Time"])],
-                orientation='h', name=str(row["Job_Name"]), text=str(row["Job_Name"]),
+                x=[int(row["Waktu_Proses"])], 
+                y=["Mesin"], 
+                base=[int(row["Saat_Mulai"])],
+                orientation='h', 
+                name=str(row["Job"]), 
+                text=str(row["Job"]),
                 textposition='inside',
-                marker=dict(color=pastel_colors[color_idx], line=dict(color='#5C1A30', width=1)),
-                hovertemplate=f"<b>Job:</b> {row['Job_Name']}<br><b>Waktu:</b> {row['Processing_Time']}<br><b>Mulai:</b> {row['Start_Time']}<br><b>Selesai:</b> {row['Completion_Time']}<extra></extra>"
+                insidetextanchor='middle',
+                textfont=dict(size=14, color='black', family='Plus Jakarta Sans'),
+                marker=dict(color=pastel_colors[color_idx], line=dict(color='grey', width=0.8)),
+                hovertemplate=f"<b>Job:</b> {row['Job']}<br><b>Waktu proses:</b> {row['Waktu_Proses']}<br><b>Mulai:</b> {row['Saat_Mulai']}<br><b>Selesai:</b> {row['Saat_Selesai']}<extra></extra>"
             ))
-        tick_vals = [0] + list(map(int, df_spt["Completion_Time"].values))
+        
+        # Menentukan daftar nilai penanda angka sumbu ukuran (Tick Values)
+        max_time = int(df_spt["Saat_Selesai"].max())
+        tick_vals = [0] + list(map(int, df_spt["Saat_Selesai"].values))
+        
+        # ─── MEMBUAT GARIS UKURAN BERPANAH (Sumbu Garis Timeline image_6bd022.png) ───
+        # 1. Garis Dasar Sumbu X (Timeline Horizontal) Berpanah Kanan di Ujung
+        fig_gantt.add_annotation(
+            x=max_time * 1.02, y=-0.54, xref="x", yref="y",
+            showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=1.5, arrowcolor="black",
+            ax=0, ay=-0.54, axref="x", ayref="y"
+        )
+        fig_gantt.add_shape(
+            type="line", x0=0, y0=-0.54, x1=max_time * 1.02, y1=-0.54,
+            line=dict(color="black", width=1.5)
+        )
+        
+        # 2. Garis Tegak Sumbu Y di Sisi Kiri Berpanah Ke Atas
+        fig_gantt.add_annotation(
+            x=0, y=0.6, xref="x", yref="y",
+            showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=1.5, arrowcolor="black",
+            ax=0, ay=-0.54, axref="x", ayref="y"
+        )
+        
+        # Tata letak sumbu agar bersih dan berfokus penuh pada estetika garis ukuran luar
         fig_gantt.update_layout(
-            barmode='stack', height=200, plot_bgcolor="white", showlegend=False,
-            margin=dict(l=10, r=10, t=20, b=20),
-            xaxis=dict(tickmode='array', tickvals=tick_vals, gridcolor="#FFE5EC", side="bottom"),
-            yaxis=dict(visible=False)
+            barmode='stack', 
+            height=250, 
+            plot_bgcolor="white", 
+            paper_bgcolor="#FFF8FA",
+            showlegend=False,
+            margin=dict(l=40, r=40, t=10, b=60),
+            xaxis=dict(
+                tickmode='array', 
+                tickvals=tick_vals, 
+                showgrid=False,
+                showline=False,
+                zeroline=False,
+                ticks="outside",
+                tickcolor="black",
+                ticklen=8,
+                tickfont=dict(size=13, color="black", family='Plus Jakarta Sans'),
+                range=[-1, max_time * 1.04]
+            ),
+            yaxis=dict(
+                visible=False,
+                range=[-0.7, 0.7]
+            )
         )
         st.plotly_chart(fig_gantt, use_container_width=True)
     else:
         st.warning("⚠️ Gantt chart belum dapat dibuat. Silakan isi data di menu 'Input Data Job'.")
 
 # ─── HALAMAN 5: DOWNLOAD ──────────────────────────────────────────────────────
-elif menu_pilihan == "📥  Download Hasil":
+elif menu_pilihan == "📥  Unduh Hasil":
     st.markdown(f"""<div class="section-header">{icon("download","#FF8FAB",20)}<div class="section-title">Unduh Hasil Penjadwalan SPT</div></div>""", unsafe_allow_html=True)
     if df_spt is not None:
         st.markdown(f"""
@@ -431,13 +478,17 @@ elif menu_pilihan == "📥  Download Hasil":
             <div class="box-title">{icon("download","#FF8FAB",17)} &nbsp;Ekspor Berkas CSV Hasil Perhitungan Terjadwal</div>
             <div class="box-text">
                 Rangkaian matriks data urutan pengerjaan optimal Shortest Processing Time (SPT) mencakup kalkulasi
-                saat mulai (<i>start time</i>), saat pengerjaan selesai (<i>completion time</i>), dan selisih keterlambatan batas waktu (<i>lateness</i>)
+                saat mulai, saat pengerjaan selesai, dan selisih keterlambatan batas waktu (lateness)
                 dapat diunduh secara penuh di bawah ini.
             </div>
         </div>
         """, unsafe_allow_html=True)
+        
+        df_download = df_spt.copy()
+        df_download.columns = ["Job", "Waktu proses", "Due date", "Saat mulai", "Saat selesai", "Lateness"]
+        
         csv_buffer = io.StringIO()
-        df_spt.to_csv(csv_buffer, index=False)
+        df_download.to_csv(csv_buffer, index=False)
         st.download_button(
             label="  Download Hasil Analisis Penjadwalan (.CSV)",
             data=csv_buffer.getvalue(),
