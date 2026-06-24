@@ -424,7 +424,7 @@ elif menu_pilihan == "📊  Hasil Gantt Chart":
 
 # ─── HALAMAN 5: DOWNLOAD ──────────────────────────────────────────────────────
 elif menu_pilihan == "📥  Download Hasil":
-    st.markdown(f"""<div class="section-header">{icon("download","#FF8FAB",20)}<div class="section-title">Unduh Hasil Eksperimen</div></div>""", unsafe_allow_html=True)
+    st.markdown(f"""<div class="section-header">{icon("download","#FF8FAB",20)}<div class="section-title">Unduh Hasil Penjadwalan SPT</div></div>""", unsafe_allow_html=True)
     if df_spt is not None:
         st.markdown(f"""
         <div class="dashboard-box">
