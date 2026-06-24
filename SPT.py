@@ -42,99 +42,95 @@ st.markdown("""
 html, body, [class*="css"] {
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
-
-/* ─── DASHBOARD BACKGROUND (DARK PURPLE LIKE MCP OPTIMIZER) ─── */
 .stApp {
-    background: #2D1A29; /* Warna ungu gelap pekat */
-    color: #F3EAF0;
+    background: #FFF8FA;
 }
 
-/* Mengubah warna teks judul standar Streamlit agar kontras di latar gelap */
-h1, h2, h3, h4, h5, h6, p, span, label {
-    color: #F3EAF0 !important;
-}
-
-/* ─── SIDEBAR (DARKER PINK WITH ANIMATED BUBBLES) ─── */
+/* ─── SIDEBAR DENGAN ANIMASI GELEMBUNG BERGERAK ─── */
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #A84460 0%, #611C31 100%) !important; /* Pink lebih gelap / Maroon Mauve */
-    border-right: 1px solid #A84460 !important;
+    background: linear-gradient(180deg, #FFE5EC 0%, #FFC2D1 100%) !important;
+    border-right: 1px solid #FFB3C6 !important;
     padding-top: 0 !important;
     position: relative;
     overflow: hidden !important;
 }
 
-/* Inject Gelembung Animasi via CSS */
+/* Membuat lapisan gelembung transparan bergerak di atas background pink */
 [data-testid="stSidebar"]::before {
     content: '';
     position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0; left: 0;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 4px, transparent 4px),
-        radial-gradient(circle at 75% 40%, rgba(255, 255, 255, 0.08) 8px, transparent 8px),
-        radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.12) 6px, transparent 6px),
-        radial-gradient(circle at 80% 85%, rgba(255, 255, 255, 0.06) 12px, transparent 12px),
-        radial-gradient(circle at 15% 30%, rgba(255, 255, 255, 0.07) 10px, transparent 10px);
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.25) 6px, transparent 6px),
+        radial-gradient(circle at 75% 40%, rgba(255, 255, 255, 0.2) 10px, transparent 10px),
+        radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.3) 8px, transparent 8px),
+        radial-gradient(circle at 80% 85%, rgba(255, 255, 255, 0.15) 14px, transparent 14px),
+        radial-gradient(circle at 15% 30%, rgba(255, 255, 255, 0.22) 12px, transparent 12px);
     background-size: 100% 100%;
-    animation: floatBubbles 12s linear infinite;
+    animation: gerakGelembung 14s linear infinite;
     pointer-events: none;
+    z-index: 0;
 }
 
-@keyframes floatBubbles {
+@keyframes gerakGelembung {
     0% { background-position: 0px 0px; }
-    100% { background-position: 0px -200px; }
+    100% { background-position: 0px -300px; }
+}
+
+/* Memastikan konten sidebar berada di atas animasi gelembung */
+[data-testid="stSidebar"] > div {
+    position: relative;
+    z-index: 1;
 }
 
 [data-testid="stSidebar"] .stRadio > label { display: none !important; }
 [data-testid="stSidebar"] .stRadio fieldset { border: none !important; padding: 0 !important; margin: 0 !important; }
 
-/* Item Menu Navigasi di Sidebar */
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label {
     background: transparent !important;
     border: none !important;
     border-radius: 10px !important;
     padding: 11px 14px !important;
-    margin-bottom: 5px !important;
+    margin-bottom: 3px !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    transition: background 0.2s ease !important;
     display: flex !important;
     align-items: center !important;
 }
 
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.45) !important;
 }
 
-/* Menu Aktif saat Diklik */
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label[data-checked="true"] {
-    background: rgba(255, 255, 255, 0.25) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    background: rgba(255, 255, 255, 0.75) !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(255, 143, 171, 0.2) !important;
 }
 
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label p,
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label span {
-    color: #FFE5EC !important; /* Teks menu warna pink terang cerah */
+    color: #7A2840 !important;
     font-size: 13.5px !important;
     font-weight: 400 !important;
 }
 
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label[data-checked="true"] p,
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label[data-checked="true"] span {
-    font-weight: 700 !important;
-    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    color: #5C1A30 !important;
 }
 
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label input[type="radio"] { display: none !important; }
 [data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label > div:first-child { display: none !important; }
 
-/* ─── HERO BANNER (MATCHED TO DARK COMPLEXION) ─── */
+/* ─── HERO BANNER ─── */
 .hero-banner {
-    background: linear-gradient(135deg, #4A2840 0%, #3D1E33 100%);
+    background: linear-gradient(135deg, #FFE5EC 0%, #FFC2D1 60%, #FFB3C6 100%);
     border-radius: 18px;
     padding: 34px 38px;
     margin-bottom: 22px;
-    border: 1px solid #5C3250;
+    border: 1px solid #FFB3C6;
     position: relative;
     overflow: hidden;
 }
@@ -143,20 +139,28 @@ h1, h2, h3, h4, h5, h6, p, span, label {
     position: absolute;
     top: -40px; right: -40px;
     width: 160px; height: 160px;
-    background: rgba(255, 143, 171, 0.08);
+    background: rgba(255, 143, 171, 0.18);
+    border-radius: 50%;
+}
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: 80px;
+    width: 100px; height: 100px;
+    background: rgba(255, 194, 209, 0.25);
     border-radius: 50%;
 }
 .hero-title {
     font-size: 26px;
     font-weight: 700;
-    color: #FFB3C6 !important;
+    color: #5C1A30;
     margin: 0 0 7px;
     line-height: 1.3;
     position: relative;
 }
 .hero-sub {
     font-size: 13.5px;
-    color: #CDB3C5 !important;
+    color: #8A3A50;
     margin: 0;
     font-weight: 400;
     position: relative;
@@ -164,8 +168,8 @@ h1, h2, h3, h4, h5, h6, p, span, label {
 
 /* ─── DASHBOARD CARDS ─── */
 .dashboard-box {
-    background: #362031;
-    border: 1px solid #4D3147;
+    background: #FFFFFF;
+    border: 1px solid #FFD6E4;
     border-radius: 16px;
     padding: 22px 26px;
     margin-bottom: 16px;
@@ -177,13 +181,13 @@ h1, h2, h3, h4, h5, h6, p, span, label {
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #A84460, #FF8FAB);
+    background: linear-gradient(90deg, #FFB3C6, #FF8FAB);
     border-radius: 16px 16px 0 0;
 }
 .box-title {
     font-size: 15px;
     font-weight: 600;
-    color: #FFB3C6 !important;
+    color: #5C1A30;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -191,33 +195,36 @@ h1, h2, h3, h4, h5, h6, p, span, label {
 }
 .box-text {
     font-size: 13.5px;
-    color: #E2D1DE !important;
+    color: #6D404E;
     line-height: 1.78;
 }
 
 /* ─── METRIC CARDS ─── */
 .metric-card {
-    background: #362031;
+    background: white;
     border-radius: 14px;
     padding: 20px;
-    border: 1px solid #4D3147;
+    border: 1px solid #FFD6E4;
     text-align: center;
 }
 .metric-card.pastel-blue  { border-top: 4px solid #BFFCC6; }
 .metric-card.pastel-pink  { border-top: 4px solid #FF8FAB; }
 .metric-card.pastel-green { border-top: 4px solid #FFC6FF; }
-.metric-label { font-size: 11px; font-weight: 600; color: #CDB3C5 !important; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-.metric-value { font-size: 22px; font-weight: 600; color: #FFF8FA !important; font-family: 'DM Mono', monospace; }
+.metric-label { font-size: 11px; font-weight: 600; color: #9A6070; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.metric-value { font-size: 22px; font-weight: 600; color: #5C1A30; font-family: 'DM Mono', monospace; }
 
 /* ─── SECTION & UTILS ─── */
 .section-header { display: flex; align-items: center; gap: 10px; margin: 24px 0 14px; }
-.section-title  { font-size: 18px; font-weight: 700; color: #FFB3C6 !important; }
-.info-box { background: #3D2237; border-left: 4px solid #A84460; border-radius: 0 10px 10px 0; padding: 13px 16px; margin-bottom: 20px; font-size: 13px; color: #E2D1DE !important; }
-hr { border-color: #4D3147 !important; }
+.section-title  { font-size: 18px; font-weight: 700; color: #5C1A30; }
+.info-box { background: #FFF3F6; border-left: 4px solid #FFB3C6; border-radius: 0 10px 10px 0; padding: 13px 16px; margin-bottom: 20px; font-size: 13px; color: #6D404E; }
+hr { border-color: #FFD6E4 !important; }
+
+/* ─── FLATICON SVG ICONS ─── */
+.nav-icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px; }
 </style>
 """, unsafe_allow_html=True)
 
-# SVG icon strings (outline style)
+# SVG icon strings (outline style, mirip Flaticon)
 ICONS = {
     "home": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>""",
     "edit": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>""",
@@ -229,23 +236,23 @@ ICONS = {
     "star": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>""",
 }
 
-def icon(name, color="#FFB3C6", size=16):
+def icon(name, color="#5C1A30", size=16):
     svg = ICONS.get(name, "")
     return f'<span style="display:inline-flex;align-items:center;width:{size}px;height:{size}px;color:{color};flex-shrink:0">{svg}</span>'
 
 # ─── SIDEBAR ─────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown(f"""
-    <div style='padding: 22px 16px 16px 16px; position: relative; z-index: 2;'>
+    <div style='padding: 22px 16px 16px 16px;'>
         <div style='display:flex; align-items:center; gap:10px; margin-bottom:4px;'>
-            <span style='display:inline-flex;align-items:center;width:28px;height:28px;color:#FFFFFF;background:rgba(255,255,255,0.2);border-radius:8px;padding:5px;box-sizing:border-box;'>{ICONS["clock"]}</span>
-            <span style='font-size: 18px; font-weight: 700; color: #FFFFFF;'>Base Ind. Eng.</span>
+            <span style='display:inline-flex;align-items:center;width:28px;height:28px;color:#5C1A30;background:rgba(255,255,255,0.6);border-radius:8px;padding:5px;box-sizing:border-box;'>{ICONS["clock"]}</span>
+            <span style='font-size: 18px; font-weight: 700; color: #5C1A30;'>SPT Dashboard</span>
         </div>
-        <div style='font-size: 11px; color: #FFCCD7; margin-top: 2px; margin-left: 38px; letter-spacing: 0.3px;'>
+        <div style='font-size: 11px; color: #9A5060; margin-top: 2px; margin-left: 38px; letter-spacing: 0.3px;'>
             Shortest Processing Time Optimizer
         </div>
     </div>
-    <div style='height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); margin: 0 12px 14px; position: relative; z-index: 2;'></div>
+    <div style='height:1px; background: linear-gradient(90deg, transparent, rgba(255,143,171,0.5), transparent); margin: 0 12px 14px;'></div>
     """, unsafe_allow_html=True)
 
     menu_pilihan = st.radio(
@@ -280,7 +287,7 @@ if st.session_state.df_input is not None and len(st.session_state.df_input) > 0:
 if menu_pilihan == "🏠  Dashboard":
     st.markdown(f"""
     <div class="hero-banner">
-        <div class="hero-title">{icon("star", "#FFB3C6", 22)} &nbsp;{sapaan}, {user_name}!</div>
+        <div class="hero-title">{icon("star", "#5C1A30", 22)} &nbsp;{sapaan}, {user_name}!</div>
         <div class="hero-sub" style="margin-top:8px;">Selamat datang di sistem optimasi urutan pengerjaan tunggal (Single Machine Scheduling).</div>
     </div>
     """, unsafe_allow_html=True)
@@ -344,7 +351,7 @@ elif menu_pilihan == "📝  Input Data Job":
         st.markdown("""
         <div class="info-box">
             📂 <b>Format Kolom CSV:</b> Pastikan file CSV Anda memiliki nama kolom header yang sesuai:
-            <code style="background-color: #4A2840; padding: 2px 6px; border-radius: 4px; color: #FFB3C6; font-weight: bold;">Job | Waktu Proses | Due date</code>
+            <code style="background-color: #FFE5EC; padding: 2px 6px; border-radius: 4px; color: #5C1A30; font-weight: bold;">Job | Waktu Proses | Due date</code>
         </div>
         """, unsafe_allow_html=True)
         uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
@@ -406,9 +413,9 @@ elif menu_pilihan == "📊  Hasil Gantt Chart":
             ))
         tick_vals = [0] + list(map(int, df_spt["Completion_Time"].values))
         fig_gantt.update_layout(
-            barmode='stack', height=200, plot_bgcolor="#362031", paper_bgcolor="#2D1A29", showlegend=False,
+            barmode='stack', height=200, plot_bgcolor="white", showlegend=False,
             margin=dict(l=10, r=10, t=20, b=20),
-            xaxis=dict(tickmode='array', tickvals=tick_vals, gridcolor="#4D3147", side="bottom", tickfont=dict(color='#F3EAF0')),
+            xaxis=dict(tickmode='array', tickvals=tick_vals, gridcolor="#FFE5EC", side="bottom"),
             yaxis=dict(visible=False)
         )
         st.plotly_chart(fig_gantt, use_container_width=True)
