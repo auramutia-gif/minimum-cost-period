@@ -228,31 +228,14 @@ with st.sidebar:
     menu_pilihan = st.radio(
         "Navigasi Halaman:",
         [
-            "  Dashboard",
-            "  Input Data Job",
-            "  Hasil Penjadwalan SPT",
-            "  Hasil Gantt Chart",
-            "  Download Hasil"
+            "🏠  Dashboard",
+            "📝  Input Data Job",
+            "📋  Hasil Penjadwalan SPT",
+            "📊  Hasil Gantt Chart",
+            "📥  Download Hasil"
         ],
-        index=0,
-        format_func=lambda x: x.strip()
+        index=0
     )
-
-    # Inject SVG icons via JS trick — pakai HTML di bawah radio untuk overlay label
-    icon_map = {
-        "  Dashboard": ICONS["home"],
-        "  Input Data Job": ICONS["edit"],
-        "  Hasil Penjadwalan SPT": ICONS["table"],
-        "  Hasil Gantt Chart": ICONS["chart"],
-        "  Download Hasil": ICONS["download"],
-    }
-
-    icon_html = """
-    <style>
-    /* Inject icons before each label text via absolute-positioned sibling */
-    </style>
-    """
-    st.markdown(icon_html, unsafe_allow_html=True)
 
 # ─── ENGINE KALKULASI ─────────────────────────────────────────────────────────
 df_spt = None
@@ -271,7 +254,7 @@ if st.session_state.df_input is not None and len(st.session_state.df_input) > 0:
     df_spt["Lateness"] = df_spt["Completion_Time"] - df_spt["Due_Date"]
 
 # ─── HALAMAN 1: DASHBOARD ─────────────────────────────────────────────────────
-if menu_pilihan == "  Dashboard":
+if menu_pilihan == "🏠  Dashboard":
     st.markdown(f"""
     <div class="hero-banner">
         <div class="hero-title">{icon("star", "#5C1A30", 22)} &nbsp;{sapaan}, {user_name}!</div>
@@ -305,7 +288,7 @@ if menu_pilihan == "  Dashboard":
     """, unsafe_allow_html=True)
 
 # ─── HALAMAN 2: INPUT DATA JOB ────────────────────────────────────────────────
-elif menu_pilihan == "  Input Data Job":
+elif menu_pilihan == "📝  Input Data Job":
     st.markdown(f"""<div class="section-header">{icon("edit","#FF8FAB",20)}<div class="section-title">Input Data Job (Pekerjaan)</div></div>""", unsafe_allow_html=True)
 
     input_method = st.radio(
@@ -362,7 +345,7 @@ elif menu_pilihan == "  Input Data Job":
                 st.error(f"❌ Terjadi kesalahan saat membaca file: {e}")
 
 # ─── HALAMAN 3: HASIL PENJADWALAN SPT ─────────────────────────────────────────
-elif menu_pilihan == "  Hasil Penjadwalan SPT":
+elif menu_pilihan == "📋  Hasil Penjadwalan SPT":
     st.markdown(f"""<div class="section-header">{icon("table","#FF8FAB",20)}<div class="section-title">Tabel Urutan Penyelesaian SPT</div></div>""", unsafe_allow_html=True)
     if df_spt is not None:
         df_display = df_spt.copy()
@@ -384,7 +367,7 @@ elif menu_pilihan == "  Hasil Penjadwalan SPT":
         st.warning("⚠️ Belum ada data pekerjaan. Silakan isi data di menu 'Input Data Job'.")
 
 # ─── HALAMAN 4: GANTT CHART ────────────────────────────────────────────────────
-elif menu_pilihan == "  Hasil Gantt Chart":
+elif menu_pilihan == "📊  Hasil Gantt Chart":
     st.markdown(f"""<div class="section-header">{icon("chart","#FF8FAB",20)}<div class="section-title">Gantt Chart Urutan Pengerjaan Mesin</div></div>""", unsafe_allow_html=True)
     if df_spt is not None:
         pastel_colors = ['#FFB3C6', '#FFDAC1', '#C9F0CB', '#BFFCC6', '#AEC6CF', '#C3B1CE', '#FFC6FF', '#E8D6F5']
@@ -410,7 +393,7 @@ elif menu_pilihan == "  Hasil Gantt Chart":
         st.warning("⚠️ Gantt chart belum dapat dibuat. Silakan isi data di menu 'Input Data Job'.")
 
 # ─── HALAMAN 5: DOWNLOAD ──────────────────────────────────────────────────────
-elif menu_pilihan == "  Download Hasil":
+elif menu_pilihan == "📥  Download Hasil":
     st.markdown(f"""<div class="section-header">{icon("download","#FF8FAB",20)}<div class="section-title">Unduh Hasil Eksperimen</div></div>""", unsafe_allow_html=True)
     if df_spt is not None:
         st.markdown(f"""
