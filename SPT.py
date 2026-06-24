@@ -12,8 +12,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-if "df_input" not in st.session_state:
-    st.session_state.df_input = None
+# Inisialisasi session state dengan kolom yang konsisten secara internal
+if "df_input" not in st.session_state or st.session_state.df_input is None:
+    st.session_state.df_input = pd.DataFrame(columns=["Job", "Waktu_Proses", "Due_Date"])
 
 wib = pytz.timezone("Asia/Jakarta")
 current_hour = datetime.now(wib).hour
@@ -216,8 +217,6 @@ html, body, [class*="css"] {
 .section-title  { font-size: 18px; font-weight: 700; color: #5C1A30; }
 .info-box { background: #FFF3F6; border-left: 4px solid #FFB3C6; border-radius: 0 10px 10px 0; padding: 13px 16px; margin-bottom: 20px; font-size: 13px; color: #6D404E; }
 hr { border-color: #FFD6E4 !important; }
-
-.nav-icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 6px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -263,18 +262,24 @@ with st.sidebar:
         index=0
     )
 
-# ─── ENGINE KALKULASI ─────────────────────────────────────────────────────────
+# ─── ENGINE KALKULASI (DIPASTIKAN AMAN DARI KEYERROR) ─────────────────────────
 df_spt = None
 if st.session_state.df_input is not None and len(st.session_state.df_input) > 0:
     df_calc = st.session_state.df_input.copy()
-    df_calc["Waktu_Proses"] = df_calc["Waktu_Proses"].astype(int)
-    df_calc["Due_Date"] = df_calc["Due_Date"].astype(int)
+    
+    # Memastikan tipe data berupa integer numerik sebelum disortir
+    df_calc["Waktu_Proses"] = pd.to_numeric(df_calc["Waktu_Proses"], errors='coerce').fillna(0).astype(int)
+    df_calc["Due_Date"] = pd.to_numeric(df_calc["Due_Date"], errors='coerce').fillna(0).astype(int)
+    
+    # Sortir berdasarkan Aturan Prioritas Lokal SPT (Terpendek ke Terpanjang)
     df_spt = df_calc.sort_values(by="Waktu_Proses", ascending=True).reset_index(drop=True)
+    
     start_times, comp_times, current_time = [], [], 0
     for idx, row in df_spt.iterrows():
         start_times.append(current_time)
         current_time += row["Waktu_Proses"]
         comp_times.append(current_time)
+        
     df_spt["Saat_Mulai"] = start_times
     df_spt["Saat_Selesai"] = comp_times
     df_spt["Lateness"] = df_spt["Saat_Selesai"] - df_spt["Due_Date"]
@@ -331,18 +336,34 @@ elif menu_pilihan == "📝  Input Data Job":
         </div>
         """, unsafe_allow_html=True)
 
-        init_data = st.session_state.df_input if st.session_state.df_input is not None else pd.DataFrame(columns=["Job", "Waktu_Proses", "Due_Date"])
+        # Buat data awal kosong atau panggil yang sudah tersimpan dengan key internal yang tepat
+        if st.session_state.df_input is None or len(st.session_state.df_input) == 0:
+            init_df = pd.DataFrame([
+                {"Job": "1", "Waktu_Proses": 5, "Due_Date": 15},
+                {"Job": "2", "Waktu_Proses": 8, "Due_Date": 10}
+            ])
+        else:
+            init_df = st.session_state.df_input.copy()
+
+        # Pemetaan agar judul kolom luar berbahasa Indonesia sesuai request
+        init_df.columns = ["Job", "Waktu proses", "Due date"]
+
         edited_df = st.data_editor(
-            init_data, num_rows="dynamic", use_container_width=True,
+            init_df, num_rows="dynamic", use_container_width=True,
             column_config={
                 "Job": st.column_config.TextColumn("Job", required=True),
-                "Waktu_Proses": st.column_config.NumberColumn("Waktu proses", min_value=1, step=1, format="%d"),
-                "Due_Date": st.column_config.NumberColumn("Due date", min_value=1, step=1, format="%d")
+                "Waktu proses": st.column_config.NumberColumn("Waktu proses", min_value=1, step=1, format="%d"),
+                "Due date": st.column_config.NumberColumn("Due date", min_value=1, step=1, format="%d")
             }
         )
+        
         if edited_df is not None and len(edited_df) > 0:
-            st.session_state.df_input = edited_df.dropna(subset=["Job", "Waktu_Proses", "Due_Date"]).copy()
+            # Kembalikan ke penamaan key internal sistem setelah diedit oleh pengguna
+            cleaned_df = edited_df.dropna(subset=["Job", "Waktu proses", "Due date"]).copy()
+            cleaned_df.columns = ["Job", "Waktu_Proses", "Due_Date"]
+            st.session_state.df_input = cleaned_df
             st.toast("Data tabel manual diperbarui!", icon="✏️")
+            
     else:
         st.markdown("""
         <div class="info-box">
@@ -357,14 +378,22 @@ elif menu_pilihan == "📝  Input Data Job":
                 col_mapping = {}
                 for col in df_csv.columns:
                     c_clean = col.strip().lower()
-                    if c_clean == 'job': col_mapping[col] = 'Job'
-                    elif 'waktu' in c_clean or 'processing' in c_clean: col_mapping[col] = 'Waktu_Proses'
-                    elif 'due' in c_clean: col_mapping[col] = 'Due_Date'
+                    if c_clean == 'job': 
+                        col_mapping[col] = 'Job'
+                    elif 'waktu' in c_clean or 'processing' in c_clean or 'proses' in c_clean: 
+                        col_mapping[col] = 'Waktu_Proses'
+                    elif 'due' in c_clean or 'date' in c_clean or 'batas' in c_clean: 
+                        col_mapping[col] = 'Due_Date'
+                
                 if len(col_mapping) >= 3:
                     df_csv = df_csv.rename(columns=col_mapping)
                     st.session_state.df_input = df_csv[['Job', 'Waktu_Proses', 'Due_Date']].dropna().copy()
                     st.success("✅ File CSV berhasil diunggah!")
-                    st.dataframe(st.session_state.df_input, use_container_width=True)
+                    
+                    # Menampilkan visualisasi tabel luar dengan nama rapi
+                    disp_uploaded = st.session_state.df_input.copy()
+                    disp_uploaded.columns = ["Job", "Waktu proses", "Due date"]
+                    st.dataframe(disp_uploaded, use_container_width=True, hide_index=True)
                 else:
                     st.error("❌ Gagal memetakan kolom. Pastikan file CSV memiliki kolom: 'Job', 'Waktu proses', dan 'Due date'.")
             except Exception as e:
@@ -373,15 +402,18 @@ elif menu_pilihan == "📝  Input Data Job":
 # ─── HALAMAN 3: HASIL PENJADWALAN SPT ─────────────────────────────────────────
 elif menu_pilihan == "📋  Hasil Penjadwalan SPT":
     st.markdown(f"""<div class="section-header">{icon("table","#FF8FAB",20)}<div class="section-title">Tabel Urutan Penyelesaian SPT</div></div>""", unsafe_allow_html=True)
-    if df_spt is not None:
+    if df_spt is not None and len(df_spt) > 0:
         df_display = df_spt.copy()
+        # Mengubah penamaan header tabel menjadi seragam sesuai format bahasa indonesia
         df_display.columns = ["Job", "Waktu proses", "Due date", "Saat mulai", "Saat selesai", "Lateness"]
         df_display = df_display[["Job", "Waktu proses", "Due date", "Saat selesai", "Lateness"]]
         st.dataframe(df_display, use_container_width=True, hide_index=True)
         st.markdown("<hr>", unsafe_allow_html=True)
+        
         mean_lateness = df_spt["Lateness"].mean()
         max_lateness = df_spt["Lateness"].max()
         sequence_str = " → ".join([str(x) for x in df_spt["Job"]])
+        
         c1, c2, c3 = st.columns(3)
         with c1:
             st.markdown(f'<div class="metric-card pastel-blue"><div class="metric-label">Rata-rata Keterlambatan</div><div class="metric-value">{mean_lateness:.3f}</div></div>', unsafe_allow_html=True)
@@ -392,15 +424,14 @@ elif menu_pilihan == "📋  Hasil Penjadwalan SPT":
     else:
         st.warning("⚠️ Belum ada data pekerjaan. Silakan isi data di menu 'Input Data Job'.")
 
-# ─── HALAMAN 4: GANTT CHART (REPLIKA IMAGE_6BD022.PNG) ────────────────────────
+# ─── HALAMAN 4: GANTT CHART (KONSISTEN & BERGARIS UKURAN KELUAR) ────────────────────────
 elif menu_pilihan == "📊  Hasil Gantt Chart":
     st.markdown(f"""<div class="section-header">{icon("chart","#FF8FAB",20)}<div class="section-title">Gantt Chart Urutan Pengerjaan Mesin</div></div>""", unsafe_allow_html=True)
-    if df_spt is not None:
+    if df_spt is not None and len(df_spt) > 0:
         pastel_colors = ['#5D8AA8', '#E6D7D2', '#ECECF4', '#E3EDF7', '#D4A5A5', '#D1E2C4', '#776B9A', '#C3D1AA']
         
         fig_gantt = go.Figure()
         
-        # Tambahkan diagram bar horizontal bertumpuk (Stacked Horizontal Bar)
         for idx, row in df_spt.iterrows():
             color_idx = idx % len(pastel_colors)
             fig_gantt.add_trace(go.Bar(
@@ -417,12 +448,10 @@ elif menu_pilihan == "📊  Hasil Gantt Chart":
                 hovertemplate=f"<b>Job:</b> {row['Job']}<br><b>Waktu proses:</b> {row['Waktu_Proses']}<br><b>Mulai:</b> {row['Saat_Mulai']}<br><b>Selesai:</b> {row['Saat_Selesai']}<extra></extra>"
             ))
         
-        # Menentukan daftar nilai penanda angka sumbu ukuran (Tick Values)
         max_time = int(df_spt["Saat_Selesai"].max())
         tick_vals = [0] + list(map(int, df_spt["Saat_Selesai"].values))
         
-        # ─── MEMBUAT GARIS UKURAN BERPANAH (Sumbu Garis Timeline image_6bd022.png) ───
-        # 1. Garis Dasar Sumbu X (Timeline Horizontal) Berpanah Kanan di Ujung
+        # Sumbu Linimasa Horizontal Berpanah Kanan (X-Axis Timeline Arrow)
         fig_gantt.add_annotation(
             x=max_time * 1.02, y=-0.54, xref="x", yref="y",
             showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=1.5, arrowcolor="black",
@@ -433,14 +462,13 @@ elif menu_pilihan == "📊  Hasil Gantt Chart":
             line=dict(color="black", width=1.5)
         )
         
-        # 2. Garis Tegak Sumbu Y di Sisi Kiri Berpanah Ke Atas
+        # Sumbu Tegak Kiri Berpanah Ke Atas (Y-Axis Arrow)
         fig_gantt.add_annotation(
             x=0, y=0.6, xref="x", yref="y",
             showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=1.5, arrowcolor="black",
             ax=0, ay=-0.54, axref="x", ayref="y"
         )
         
-        # Tata letak sumbu agar bersih dan berfokus penuh pada estetika garis ukuran luar
         fig_gantt.update_layout(
             barmode='stack', 
             height=250, 
@@ -472,7 +500,7 @@ elif menu_pilihan == "📊  Hasil Gantt Chart":
 # ─── HALAMAN 5: DOWNLOAD ──────────────────────────────────────────────────────
 elif menu_pilihan == "📥  Unduh Hasil":
     st.markdown(f"""<div class="section-header">{icon("download","#FF8FAB",20)}<div class="section-title">Unduh Hasil Penjadwalan SPT</div></div>""", unsafe_allow_html=True)
-    if df_spt is not None:
+    if df_spt is not None and len(df_spt) > 0:
         st.markdown(f"""
         <div class="dashboard-box">
             <div class="box-title">{icon("download","#FF8FAB",17)} &nbsp;Ekspor Berkas CSV Hasil Perhitungan Terjadwal</div>
