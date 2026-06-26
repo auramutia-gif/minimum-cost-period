@@ -12,7 +12,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght=300;400;500;600&family=DM+Mono:wght=400;500&display=swap');
 
 html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif;
@@ -58,29 +58,50 @@ html, body, [class*="css"] {
     max-width: 1400px;
 }
 
-.hero-banner {
+/* Updated Hero Banner using Flexbox for Side-by-Side layout */
+.hero-container {
     background: linear-gradient(135deg, #3D1A2E 0%, #7B3560 55%, #E8789F 100%);
     border-radius: 16px;
     padding: 36px 40px;
     margin-bottom: 28px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.hero-banner::before {
+.hero-container::before {
     content: '';
     position: absolute;
     top: -60px; right: -60px;
     width: 220px; height: 220px;
     border-radius: 50%;
     background: rgba(244,167,201,0.15);
+    z-index: 1;
 }
-.hero-banner::after {
+.hero-container::after {
     content: '';
     position: absolute;
     bottom: -40px; left: 30%;
     width: 160px; height: 160px;
     border-radius: 50%;
     background: rgba(255,255,255,0.07);
+    z-index: 1;
+}
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+.hero-logo-wrapper {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .hero-title {
     font-size: 28px;
@@ -258,7 +279,6 @@ header[data-testid="stHeader"] button:hover {
     color: white !important;
 }
 
-/* Manual entry table styling */
 .stDataEditor {
     border-radius: 10px !important;
     border: 1px solid #F5D6E8 !important;
@@ -288,7 +308,7 @@ with st.sidebar:
     lead_time = st.number_input("Lead Time (periods)", value=1, min_value=0, help="Gap between ordering and receiving goods")
 
     st.markdown("""
-    <div style='margin-top:32px; padding:14px; background:#5C2A45; border-radius:10px; border:1px solid #8B4F72'>
+    <div style='margin-top:24px; padding:14px; background:#5C2A45; border-radius:10px; border:1px solid #8B4F72'>
         <div style='font-size:11px; font-weight:600; color:#F4A7C9; letter-spacing:0.5px; margin-bottom:8px'>HOW TO USE</div>
         <div style='font-size:11px; color:#C084A0; line-height:1.6'>
             1. Set parameters above<br>
@@ -298,14 +318,30 @@ with st.sidebar:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    
+    # ─── Watermark section at the bottom of the sidebar ───
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style='border-top: 1px solid #5C2A45; padding-top: 16px; text-align: center;'>
+        <div style='font-size: 9px; color: #8B4F72; text-transform: uppercase; letter-spacing: 1px;'>Powered by</div>
+        <div style='font-size: 12px; font-weight: 600; color: #F4A7C9; margin-top: 2px;'>ELITE Laboratory</div>
+        <div style='font-size: 10px; color: #C084A0; font-style: italic;'>Basic Industrial Engineering</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
-# ─── Hero Banner ──────────────────────────────────────────────────────────────
+# ─── Hero Banner with Logo ELITE ──────────────────────────────────────────────
+# Menggunakan link langsung image_e51407.png yang Anda upload
 st.markdown("""
-<div class="hero-banner">
-    <div class="hero-badge">MCP · Minimum Cost Per Period</div>
-    <div class="hero-title">📦 MRP Optimization Dashboard</div>
-    <div class="hero-sub">Automatically calculate optimal lot sizing using the Minimum Cost Per Period method</div>
+<div class="hero-container">
+    <div class="hero-content">
+        <div class="hero-badge">MCP · Minimum Cost Per Period</div>
+        <div class="hero-title">📦 MRP Optimization Dashboard</div>
+        <div class="hero-sub">Automatically calculate optimal lot sizing using the Minimum Cost Per Period method</div>
+    </div>
+    <div class="hero-logo-wrapper">
+        <img src="https://instances.static.asst.ai/fe34bb76-2f3b-486d-ab12-680c65792ba2/image_e51407.png" width="85" alt="ELITE Logo">
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -335,19 +371,18 @@ with tab_manual:
     </div>
     """, unsafe_allow_html=True)
 
-    # Creating an empty baseline structure with no pre-filled values
     default_data = pd.DataFrame(columns=["Period", "GR", "Scheduled_Receipts"])
 
     edited_df = st.data_editor(
         default_data,
-        num_rows="dynamic", # Enables Streamlit's built-in row addition and deletion UI
+        num_rows="dynamic",
         use_container_width=True,
         column_config={
             "Period": st.column_config.TextColumn(
                 "Period", 
                 help="e.g., P1, W1, Jan, Week 1", 
                 width="small",
-                required=True # Ensures the period column cannot be left empty when a row is added
+                required=True
             ),
             "GR": st.column_config.NumberColumn(
                 "Gross Requirements (GR)", 
@@ -368,7 +403,6 @@ with tab_manual:
     )
 
     if st.button("▶  Run MCP with Manual Data", type="primary"):
-        # Extra Validation: Clean up rows that might have been added but left completely empty
         if edited_df is not None and len(edited_df) > 0:
             cleaned_df = edited_df.dropna(subset=['Period', 'GR'])
             if len(cleaned_df) < 1:
@@ -377,7 +411,7 @@ with tab_manual:
                 df_input = cleaned_df.copy()
                 st.session_state["df_input"] = df_input
                 st.session_state["source"] = "manual"
-                st.rerun() # Forces the app to refresh and instantly compute the results
+                st.rerun()
         else:
             st.markdown('<div class="warn-box">⚠️ Please click "+ Add row" and enter your period data first.</div>', unsafe_allow_html=True)
             
@@ -405,7 +439,6 @@ with tab_upload:
             st.markdown(f'<div class="success-box">✅ <strong>File uploaded successfully.</strong> {len(df_csv)} periods loaded.</div>', unsafe_allow_html=True)
             st.dataframe(df_csv, use_container_width=True, height=300)
 
-# ── Retrieve df_input from session state if not freshly set ──────────────────
 if df_input is None and "df_input" in st.session_state:
     df_input = st.session_state["df_input"]
 
@@ -421,42 +454,31 @@ if df_input is None:
 
 # ─── Read & Process ───────────────────────────────────────────────────────────
 if df_input is not None:
-    # 1. Clean columns by stripping whitespace and removing completely empty rows
     df_input.columns = df_input.columns.str.strip()
     df_input = df_input.dropna(how='all')
 
-    # 2. Safely find or create the Period column
     if 'Period' in df_input.columns:
-        # Filter out rows where Period is blank or contains a string literal 'None'
         df_input = df_input[df_input['Period'].notna()]
         df_input = df_input[df_input['Period'].astype(str).str.strip().str.lower() != 'none']
         periods_label = df_input['Period'].astype(str).tolist()
     else:
-        # Fallback if CSV uploaded has no 'Period' column name
         periods_label = [f"P{i+1}" for i in range(len(df_input))]
 
-    # 3. Safely parse Gross Requirements (GR)
     if 'GR' in df_input.columns:
-        # Drop rows where GR is completely missing
         df_input = df_input.dropna(subset=['GR'])
         df_input = df_input[df_input['GR'].astype(str).str.strip().str.lower() != 'none']
         gross_req = pd.to_numeric(df_input['GR'], errors='coerce').fillna(0).astype(int).tolist()
     else:
         gross_req = [0] * len(df_input)
 
-    # 4. Safely parse Scheduled Receipts (SR)
     if 'Scheduled_Receipts' in df_input.columns:
         scheduled_rec = pd.to_numeric(df_input['Scheduled_Receipts'], errors='coerce').fillna(0).astype(int).tolist()
     elif 'SR' in df_input.columns:
         scheduled_rec = pd.to_numeric(df_input['SR'], errors='coerce').fillna(0).astype(int).tolist()
     else:
-        # Fill with zeros if the user left the column out entirely
         scheduled_rec = [0] * len(df_input)
 
-    # Sync planning horizon length
     periods = len(gross_req)
-
-    # Ensure periods match our labels to prevent indexing misalignment
     periods_label = periods_label[:periods]
 
 # ── MCP Algorithm ─────────────────────────────────────────────────────────────
@@ -579,7 +601,7 @@ total_orders  = sum(1 for x in mrp_planned_receipts if x > 0)
 total_units   = sum(mrp_planned_receipts)
 
 
-# ─── METRIC CARDS (3 cards only) ──────────────────────────────────────────────
+# ─── METRIC CARDS ─────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
     <div class="section-icon" style="background:#FFF0F7">📊</div>
@@ -767,7 +789,7 @@ st.markdown(f"""
 st.markdown("<hr>", unsafe_allow_html=True)
 
 
-# ─── CHARTS (only the 2 bar charts) ──────────────────────────────────────────
+# ─── CHARTS ───────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="section-header">
     <div class="section-icon" style="background:#FFF0F7">📈</div>
